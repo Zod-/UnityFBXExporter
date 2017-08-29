@@ -32,16 +32,18 @@ namespace UnityFBXExporter
 {
     public static class FBXObjectSerializer
     {
-        public static void Serialize(GameObject gameObj, string newPath, bool copyMaterials, bool copyTextures, StringBuilder objectProps, StringBuilder objectConnections)
+        public static void Serialize(GameObject[] gameObjects, string newPath, bool copyMaterials, bool copyTextures, StringBuilder objectProps, StringBuilder objectConnections)
         {
             ObjectHeader(objectProps);
             ConnectionsHeader(objectConnections);
+            foreach (var gameObject in gameObjects)
+            {
+                // First finds all unique materials and compiles them (and writes to the object connections) for funzies
+                FBXMaterialSerializer.Serialize(gameObject, newPath, objectProps, objectConnections, copyMaterials, copyTextures);
 
-            // First finds all unique materials and compiles them (and writes to the object connections) for funzies
-            FBXMaterialSerializer.Serialize(gameObj, newPath, objectProps, objectConnections, copyMaterials, copyTextures);
-
-            // Run recursive FBX Mesh grab over the entire gameObject
-            FBXUnityMeshGetter.GetMeshToString(gameObj, objectProps, objectConnections);
+                // Run recursive FBX Mesh grab over the entire gameObject
+                FBXUnityMeshGetter.GetMeshToString(gameObject, objectProps, objectConnections);
+            }
 
             ObjectFooter(objectProps);
             ConnectionFooter(objectConnections);

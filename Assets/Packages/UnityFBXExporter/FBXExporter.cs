@@ -40,7 +40,7 @@ namespace UnityFBXExporter
 {
     public static class FBXExporter
     {
-        public static bool ExportGameObjToFBX(GameObject gameObj, string newPath, bool copyMaterials = false, bool copyTextures = false)
+        public static bool ExportGameObjToFBX(GameObject[] gameObjects, string newPath, bool copyMaterials = false, bool copyTextures = false)
         {
             // Check to see if the extension is right
             if (newPath.Remove(0, newPath.LastIndexOf('.')) != ".fbx")
@@ -51,10 +51,13 @@ namespace UnityFBXExporter
 
             if (copyMaterials)
             {
-                CopyComplexMaterialsToPath(gameObj, newPath, copyTextures);
+                foreach (var gameObject in gameObjects)
+                {
+                    CopyComplexMaterialsToPath(gameObject, newPath, copyTextures);
+                }
             }
 
-            var buildMesh = MeshToString(gameObj, newPath, copyMaterials, copyTextures);
+            var buildMesh = MeshToString(gameObjects, newPath, copyMaterials, copyTextures);
 
             if (File.Exists(newPath))
             {
@@ -105,14 +108,14 @@ namespace UnityFBXExporter
             return BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0);
         }
 
-        public static string MeshToString(GameObject gameObj, string newPath, bool copyMaterials = false, bool copyTextures = false)
+        public static string MeshToString(GameObject[] gameObjects, string newPath, bool copyMaterials = false, bool copyTextures = false)
         {
             var sb = new StringBuilder();
             FBXFileHeaderDefinition.Serialize(newPath, sb);
 
             var objectProps = new StringBuilder();
             var objectConnections = new StringBuilder();
-            FBXObjectSerializer.Serialize(gameObj, newPath, copyMaterials, copyTextures, objectProps, objectConnections);
+            FBXObjectSerializer.Serialize(gameObjects, newPath, copyMaterials, copyTextures, objectProps, objectConnections);
 
             sb.Append(objectProps);
             sb.Append(objectConnections);

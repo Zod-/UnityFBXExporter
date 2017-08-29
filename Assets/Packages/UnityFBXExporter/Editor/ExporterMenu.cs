@@ -79,37 +79,38 @@ namespace UnityFBXExporter
                 return;
             }
 
-            var currentGameObject = Selection.activeObject as GameObject;
+            var currentGameObjects = Selection.gameObjects;
+            
 
-            if (currentGameObject == null)
+            if (currentGameObjects == null)
             {
                 EditorUtility.DisplayDialog("Warning", "Item selected is not a GameObject", "Okay");
                 return;
             }
 
-            ExportGameObject(currentGameObject, copyMaterials, copyTextures);
+            ExportGameObject(currentGameObjects, copyMaterials, copyTextures);
         }
 
         /// <summary>
         /// Exports ANY Game Object given to it. Will provide a dialog and return the path of the newly exported file
         /// </summary>
         /// <returns>The path of the newly exported FBX file</returns>
-        /// <param name="gameObj">Game object to be exported</param>
+        /// <param name="gameObjects">Game object to be exported</param>
         /// <param name="copyMaterials">If set to <c>true</c> copy materials.</param>
         /// <param name="copyTextures">If set to <c>true</c> copy textures.</param>
         /// <param name="oldPath">Old path.</param>
-        public static string ExportGameObject(GameObject gameObj, bool copyMaterials, bool copyTextures, string oldPath = null)
+        public static string ExportGameObject(GameObject[] gameObjects, bool copyMaterials, bool copyTextures, string oldPath = null)
         {
-            if (gameObj == null)
+            if (gameObjects == null)
             {
                 EditorUtility.DisplayDialog("Object is null", "Please select any GameObject to Export to FBX", "Okay");
                 return null;
             }
 
-            var newPath = GetNewPath(gameObj, oldPath);
+            var newPath = GetNewPath(oldPath);
 
             if (string.IsNullOrEmpty(newPath)) { return null; }
-            var isSuccess = FBXExporter.ExportGameObjToFBX(gameObj, newPath, copyMaterials, copyTextures);
+            var isSuccess = FBXExporter.ExportGameObjToFBX(gameObjects, newPath, copyMaterials, copyTextures);
 
             if (isSuccess)
             {
@@ -123,13 +124,11 @@ namespace UnityFBXExporter
         /// Creates save dialog window depending on old path or right to the /Assets folder no old path is given
         /// </summary>
         /// <returns>The new path.</returns>
-        /// <param name="gameObject">Item to be exported</param>
         /// <param name="oldPath">The old path that this object was original at.</param>
-        private static string GetNewPath(GameObject gameObject, string oldPath = null)
+        private static string GetNewPath(string oldPath = null)
         {
             // NOTE: This must return a path with the starting "Assets/" or else textures won't copy right
-
-            var name = gameObject.name;
+            const string name = "model";
 
             string newPath;
             if (oldPath == null)
