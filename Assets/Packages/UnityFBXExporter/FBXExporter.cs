@@ -125,18 +125,12 @@ namespace UnityFBXExporter
             Material[] materials;
 
             // First finds all unique materials and compiles them (and writes to the object connections) for funzies
-            string materialsObjectSerialized;
-            string materialConnectionsSerialized;
-
-            FBXMaterialSerializer.GetAllMaterialsToString(gameObj, newPath, copyMaterials, copyTextures, out materials, out materialsObjectSerialized, out materialConnectionsSerialized);
+            FBXMaterialSerializer.GetAllMaterialsToString(gameObj, newPath, out materials, objectProps, objectConnections, copyMaterials, copyTextures);
 
             // Run recursive FBX Mesh grab over the entire gameObject
-            FBXUnityMeshGetter.GetMeshToString(gameObj, materials, ref objectProps, ref objectConnections);
+            FBXUnityMeshGetter.GetMeshToString(gameObj, materials, objectProps, objectConnections);
 
             // write the materials to the objectProps here. Should not do it in the above as it recursive.
-
-            objectProps.Append(materialsObjectSerialized);
-            objectConnections.Append(materialConnectionsSerialized);
 
             // Close up both builders;
             objectProps.AppendLine("}");

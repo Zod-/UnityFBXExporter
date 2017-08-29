@@ -31,7 +31,7 @@ using System.Collections.Generic;
 
 namespace UnityFBXExporter
 {
-    public class FBXUnityMeshGetter
+    public static class FBXUnityMeshGetter
     {
 
         /// <summary>
@@ -46,8 +46,8 @@ namespace UnityFBXExporter
         /// <param name="parentModelId">Parent model id, 0 if top parent.</param>
         public static long GetMeshToString(GameObject gameObj,
                                            Material[] materials,
-                                           ref StringBuilder objects,
-                                           ref StringBuilder connections,
+                                           StringBuilder objects,
+                                           StringBuilder connections,
                                            GameObject parentObject = null,
                                            long parentModelId = 0)
         {
@@ -501,7 +501,7 @@ namespace UnityFBXExporter
             {
                 var childObject = gameObj.transform.GetChild(i).gameObject;
 
-                GetMeshToString(childObject, materials, ref tempObjectSb, ref tempConnectionsSb, gameObj, modelId);
+                GetMeshToString(childObject, materials, tempObjectSb, tempConnectionsSb, gameObj, modelId);
             }
 
             objects.Append(tempObjectSb);

@@ -39,14 +39,13 @@ namespace UnityFBXExporter
         /// <summary>
         /// Serializes textures to FBX format.
         /// </summary>
-        /// <param name="gameObj">Parent GameObject being exported.</param>
         /// <param name="newPath">The path to export to.</param>
         /// <param name="copyTextures"></param>
-        /// <param name="objects"></param>
-        /// <param name="connections">The string to connect this to the  material.</param>
         /// <param name="material"></param>
         /// <param name="materialName"></param>
-        public static void SerializedTextures(GameObject gameObj, string newPath, Material material, string materialName, bool copyTextures, out string objects, out string connections)
+        /// <param name="objectsSb"></param>
+        /// <param name="connectionsSb"></param>
+        public static void SerializedTextures(string newPath, Material material, string materialName, StringBuilder objectsSb, StringBuilder connectionsSb, bool copyTextures = false)
         {
             // TODO: FBX import currently only supports Diffuse Color and Normal Map
             // Because it is undocumented, there is no way to easily find out what other textures
@@ -54,56 +53,30 @@ namespace UnityFBXExporter
             // Also NOTE, Unity 5.1.2 will import FBX files with legacy shaders. This is fix done
             // in at least 5.3.4.
 
-            var objectsSb = new StringBuilder();
-            var connectionsSb = new StringBuilder();
-
             var materialId = Mathf.Abs(material.GetInstanceID());
-
             var mainTexture = material.GetTexture("_MainTex");
-
-            string newObjects;
-            string newConnections;
 
             // Serializes the Main Texture, one of two textures that can be stored in FBX's system
             if (mainTexture != null)
             {
-                SerializeOneTexture(gameObj, newPath, material, materialName, materialId, copyTextures, "_MainTex", "DiffuseColor", out newObjects, out newConnections);
-                objectsSb.AppendLine(newObjects);
-                connectionsSb.AppendLine(newConnections);
+                SerializeOneTexture(newPath, material, materialName, materialId, copyTextures, "_MainTex", "DiffuseColor", objectsSb, connectionsSb);
             }
-
-            if (SerializeOneTexture(gameObj, newPath, material, materialName, materialId, copyTextures, "_BumpMap", "NormalMap", out newObjects, out newConnections))
-            {
-                objectsSb.AppendLine(newObjects);
-                connectionsSb.AppendLine(newConnections);
-            }
-
-            connections = connectionsSb.ToString();
-            objects = objectsSb.ToString();
+            SerializeOneTexture(newPath, material, materialName, materialId, copyTextures, "_BumpMap", "NormalMap", objectsSb, connectionsSb);
         }
 
-        public static bool SerializeOneTexture(GameObject gameObj,
-            string newPath,
+        public static void SerializeOneTexture(string newPath,
             Material material,
             string materialName,
             int materialId,
             bool copyTextures,
             string unityExtension,
             string textureType,
-            out string objects,
-            out string connections)
+            StringBuilder objectsSb,
+            StringBuilder connectionsSb)
         {
-            var objectsSb = new StringBuilder();
-            var connectionsSb = new StringBuilder();
-
             var texture = material.GetTexture(unityExtension);
+            if (texture == null) { return; }
 
-            if (texture == null)
-            {
-                objects = "";
-                connections = "";
-                return false;
-            }
 
 #if UNITY_EDITOR
             var originalAssetPath = AssetDatabase.GetAssetPath(texture);
@@ -115,8 +88,8 @@ namespace UnityFBXExporter
 #endif
             var fullDataFolderPath = Application.dataPath;
             var textureFilePathFullName = originalAssetPath;
-            var textureName = Path.GetFileNameWithoutExtension(originalAssetPath);
             var textureExtension = Path.GetExtension(originalAssetPath);
+            var textureName = GetTextureName(materialName, copyTextures, unityExtension, originalAssetPath);
 
             // If we are copying the textures over, we update the relative positions
             if (copyTextures)
@@ -125,15 +98,12 @@ namespace UnityFBXExporter
                 fullDataFolderPath = fullDataFolderPath.Remove(indexOfAssetsFolder, fullDataFolderPath.Length - indexOfAssetsFolder);
 
                 var newPathFolder = newPath.Remove(newPath.LastIndexOf('/') + 1, newPath.Length - newPath.LastIndexOf('/') - 1);
-                textureName = gameObj.name + "_" + material.name + unityExtension;
-
                 textureFilePathFullName = fullDataFolderPath + "/" + newPathFolder + textureName + textureExtension;
             }
 
             var textureReference = FBXExporter.GetRandomFBXId();
 
             // TODO - test out different reference names to get one that doesn't load a _MainTex when importing.
-
             objectsSb.AppendLine("\tTexture: " + textureReference + ", \"Texture::" + materialName + "\", \"\" {");
             objectsSb.AppendLine("\t\tType: \"TextureVideoClip\"");
             objectsSb.AppendLine("\t\tVersion: 202");
@@ -167,11 +137,16 @@ namespace UnityFBXExporter
             connectionsSb.AppendLine("\tC: \"OP\"," + textureReference + "," + materialId + ", \"" + textureType + "\"");
 
             connectionsSb.AppendLine();
+        }
 
-            objects = objectsSb.ToString();
-            connections = connectionsSb.ToString();
-
-            return true;
+        private static string GetTextureName(string materialName, bool copyTextures, string unityExtension, string originalAssetPath)
+        {
+            var textureName = Path.GetFileNameWithoutExtension(originalAssetPath);
+            if (copyTextures)
+            {
+                textureName = materialName + unityExtension;
+            }
+            return textureName;
         }
     }
 }
