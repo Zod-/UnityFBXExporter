@@ -45,12 +45,7 @@ namespace UnityFBXExporter
         /// <param name="copyMaterials">Should materials be copied</param>
         public static void GetAllMaterialsToString(GameObject gameObj, string newPath, out Material[] materials, StringBuilder objectSb, StringBuilder connectionsSb, bool copyMaterials = false, bool copyTextures = false)
         {
-            // Need to get all unique materials for the subMesh here and then write them in
-            //@cartzhang modify.As meshRenderer and skinnedRenderer is same level in inherit relation shape.
-            // if not check,skinned render ,may lost some materials.
-            // Gets all the unique materials within this GameObject Hierarchy
             materials = GetUniqueMaterials(gameObj).ToArray();
-
             foreach (var mat in materials)
             {
                 var materialName = GetMaterialName(gameObj.name, mat.name, copyMaterials);
