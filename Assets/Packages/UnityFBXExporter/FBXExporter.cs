@@ -128,7 +128,7 @@ namespace UnityFBXExporter
             string materialsObjectSerialized;
             string materialConnectionsSerialized;
 
-            FBXUnityMaterialGetter.GetAllMaterialsToString(gameObj, newPath, copyMaterials, copyTextures, out materials, out materialsObjectSerialized, out materialConnectionsSerialized);
+            FBXMaterialSerializer.GetAllMaterialsToString(gameObj, newPath, copyMaterials, copyTextures, out materials, out materialsObjectSerialized, out materialConnectionsSerialized);
 
             // Run recursive FBX Mesh grab over the entire gameObject
             FBXUnityMeshGetter.GetMeshToString(gameObj, materials, ref objectProps, ref objectConnections);
