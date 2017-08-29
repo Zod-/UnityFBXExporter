@@ -25,6 +25,7 @@
 //
 // ===============================================================================================
 
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -36,10 +37,11 @@ namespace UnityFBXExporter
         {
             ObjectHeader(objectProps);
             ConnectionsHeader(objectConnections);
+            var geometryIds = new Dictionary<string, long>();
             foreach (var gameObject in gameObjects)
             {
                 // Run recursive FBX Mesh grab over the entire gameObject
-                FBXMeshSerializer.Serialize(gameObject, objectProps, objectConnections);
+                FBXMeshSerializer.Serialize(gameObject, objectProps, objectConnections, geometryIds);
                 // First finds all unique materials and compiles them (and writes to the object connections) for funzies
                 FBXMaterialSerializer.Serialize(gameObject, newPath, objectProps, objectConnections, copyMaterials, copyTextures);
             }

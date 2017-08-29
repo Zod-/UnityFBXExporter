@@ -25,6 +25,7 @@
 //
 // ===============================================================================================
 
+using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 
@@ -39,14 +40,15 @@ namespace UnityFBXExporter
         /// <param name="gameObject">GameObject Parent.</param>
         /// <param name="objectsSb">The StringBuilder to create objects for the FBX file.</param>
         /// <param name="connectionsSb">The StringBuilder to create connections for the FBX file.</param>
+        /// <param name="geometryIds">Cache of previously defined geometries</param>
         /// <param name="parentModelId">Parent model id, 0 if top parent.</param>
-        public static void Serialize(GameObject gameObject, StringBuilder objectsSb, StringBuilder connectionsSb, long parentModelId = 0)
+        public static void Serialize(GameObject gameObject, StringBuilder objectsSb, StringBuilder connectionsSb, Dictionary<string, long> geometryIds, long parentModelId = 0)
         {
             EnsureMeshFilterInSkinnedRenderer(gameObject);
-            SerializeCore(gameObject, parentModelId, objectsSb, connectionsSb);
+            SerializeCore(gameObject, parentModelId, objectsSb, connectionsSb, geometryIds);
         }
 
-        private static void SerializeCore(GameObject gameObject, long parentModelId, StringBuilder objectsSb, StringBuilder connectionsSb)
+        private static void SerializeCore(GameObject gameObject, long parentModelId, StringBuilder objectsSb, StringBuilder connectionsSb, Dictionary<string, long> geometryIds)
         {
             var modelId = FBXExporter.GetRandomFBXId();
             var mesh = GetMesh(gameObject);
@@ -54,14 +56,14 @@ namespace UnityFBXExporter
             SerializeObject(gameObject, mesh, modelId, parentModelId, objectsSb, connectionsSb);
             if (mesh)
             {
-                FBXMeshPropertySerializer.Serialize(mesh, gameObject.GetComponent<MeshRenderer>(), modelId, objectsSb, connectionsSb);
+                FBXMeshPropertySerializer.Serialize(mesh, gameObject, modelId, objectsSb, connectionsSb, geometryIds);
             }
 
             // Recursively add all the other objects to the string that has been built.
             for (var i = 0; i < gameObject.transform.childCount; i++)
             {
                 var childObject = gameObject.transform.GetChild(i).gameObject;
-                SerializeCore(childObject, modelId, objectsSb, connectionsSb);
+                SerializeCore(childObject, modelId, objectsSb, connectionsSb, geometryIds);
             }
         }
 

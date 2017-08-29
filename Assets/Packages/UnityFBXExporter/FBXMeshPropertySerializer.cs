@@ -33,23 +33,54 @@ namespace UnityFBXExporter
 {
     public static class FBXMeshPropertySerializer
     {
-        public static void Serialize(Mesh mesh, Renderer renderer, long modelId, StringBuilder objectsSb, StringBuilder connectionsSb)
+        /// <summary>
+        /// This name will be used to reference unique geometry ids so only 1 copy of the mesh is needed in the fbx file
+        /// TODO: Instead of GameObject names that can differ, calculate something like a hash out of the mesh and use that
+        /// </summary>
+        /// <param name="gameObject">GameObject containing the mesh</param>
+        /// <param name="mesh">The mesh itself</param>
+        /// <returns>Hierarchy name for the geometry</returns>
+        private static string GetGeometryName(GameObject gameObject, Mesh mesh)
         {
+            return string.Format("{0}.{1}", gameObject.transform.GetFullPath(), mesh.name);
+        }
+
+        /// <summary>
+        /// Serializes the geometry of the mesh or links it to a previously defined geometry if it already exists
+        /// </summary>
+        /// <param name="mesh">The mesh that should be serialized</param>
+        /// <param name="gameObject">The gameObject containing the mesh</param>
+        /// <param name="modelId">Model containing the mesh</param>
+        /// <param name="objectsSb">FBXFile stringBuilder</param>
+        /// <param name="connectionsSb">FBXFile Connections stringBuilder</param>
+        /// <param name="geometryIds">Previously defined geometries</param>
+        public static void Serialize(Mesh mesh, GameObject gameObject, long modelId, StringBuilder objectsSb, StringBuilder connectionsSb, Dictionary<string, long> geometryIds)
+        {
+            var geometryName = GetGeometryName(gameObject, mesh);
+            var renderer = gameObject.GetComponent<MeshRenderer>();
+
+            //Only have 1 copy of the geometry in the fbx file
+            if (DoesGeometryExist(geometryIds, geometryName))
+            {
+                SerializeMeshConnections(renderer, geometryName, geometryIds[geometryName], modelId, connectionsSb);
+                return;
+            }
+
             var geometryId = FBXExporter.GetRandomFBXId();
+            geometryIds[geometryName] = geometryId;
             MeshGeometryHeader(geometryId, objectsSb);
             {
                 SerializeMesh(mesh, objectsSb);
             }
             MeshGeometryFooter(objectsSb);
-            // Add the connection for the model to the geometry so it is attached the right mesh
-            SerializeMeshConnections(renderer, mesh.name, geometryId, modelId, connectionsSb);
+            SerializeMeshConnections(renderer, GetGeometryName(gameObject, mesh), geometryId, modelId, connectionsSb);
         }
 
-        /// <summary>
-        /// Adds in geometry if it exists, if it it does not exist, this is a empty gameObject file and skips over this
-        /// </summary>
-        /// <param name="mesh"></param>
-        /// <param name="objectsSb"></param>
+        private static bool DoesGeometryExist(Dictionary<string, long> geometryIds, string geometryName)
+        {
+            return geometryIds.ContainsKey(geometryName);
+        }
+        
         private static void SerializeMesh(Mesh mesh, StringBuilder objectsSb)
         {
             var vertices = mesh.vertices;
