@@ -57,21 +57,8 @@ namespace UnityFBXExporter
             // Need to get all unique materials for the subMesh here and then write them in
             //@cartzhang modify.As meshRenderer and skinnedRenderer is same level in inherit relation shape.
             // if not check,skinned render ,may lost some materials.
-            var meshRenders = gameObj.GetComponentsInChildren<Renderer>();
-
-            var uniqueMaterials = new List<Material>();
-
             // Gets all the unique materials within this GameObject Hierarchy
-            foreach (var renderer in meshRenders)
-            {
-                foreach (var mat in renderer.sharedMaterials)
-                {
-                    if (uniqueMaterials.Contains(mat) == false && mat != null)
-                    {
-                        uniqueMaterials.Add(mat);
-                    }
-                }
-            }
+            var uniqueMaterials = GetUniqueMaterials(gameObj);
 
             foreach (var mat in uniqueMaterials)
             {
@@ -186,6 +173,16 @@ namespace UnityFBXExporter
 
             matObjects = tempObjectSb.ToString();
             connections = tempConnectionsSb.ToString();
+        }
+
+        /// <summary>
+        /// Returns unique materials for all the renderers in the gameObject
+        /// </summary>
+        /// <param name="gameObj">Root gameObject to search renderers</param>
+        /// <returns>List of unique materials</returns>
+        private static List<Material> GetUniqueMaterials(GameObject gameObj)
+        {
+            return gameObj.GetComponentsInChildren<Renderer>().Select(r => r.sharedMaterial).Where(m => m).Distinct().ToList();
         }
 
         /// <summary>
