@@ -18,8 +18,13 @@ public static class ProceduralTest
     {
         var texture = new Texture2D(size, size);
         for (var x = 0; x < size; ++x)
+        {
             for (var y = 0; y < size; ++y)
+            {
                 texture.SetPixel(x, y, ProceduralPixelColor(x, y));
+            }
+        }
+
         texture.Apply();
         return texture;
     }
