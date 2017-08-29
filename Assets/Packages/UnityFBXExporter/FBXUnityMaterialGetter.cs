@@ -40,7 +40,7 @@ namespace UnityFBXExporter
     public static class FBXUnityMaterialGetter
     {
         /// <summary>
-        /// Finds all materials in a gameobject and writes them to a string that can be read by the FBX writer
+        /// Finds all materials in a gameObject and writes them to a string that can be read by the FBX writer
         /// </summary>
         /// <param name="gameObj">Parent GameObject being exported.</param>
         /// <param name="newPath">The path to export to.</param>
@@ -54,20 +54,18 @@ namespace UnityFBXExporter
             var tempObjectSb = new StringBuilder();
             var tempConnectionsSb = new StringBuilder();
 
-            // Need to get all unique materials for the submesh here and then write them in
-            //@cartzhang modify.As meshrender and skinnedrender is same level in inherit relation shape.
+            // Need to get all unique materials for the subMesh here and then write them in
+            //@cartzhang modify.As meshRenderer and skinnedRenderer is same level in inherit relation shape.
             // if not check,skinned render ,may lost some materials.
             var meshRenders = gameObj.GetComponentsInChildren<Renderer>();
 
             var uniqueMaterials = new List<Material>();
 
             // Gets all the unique materials within this GameObject Hierarchy
-            for (var i = 0; i < meshRenders.Length; i++)
+            foreach (var renderer in meshRenders)
             {
-                for (var n = 0; n < meshRenders[i].sharedMaterials.Length; n++)
+                foreach (var mat in renderer.sharedMaterials)
                 {
-                    var mat = meshRenders[i].sharedMaterials[n];
-
                     if (uniqueMaterials.Contains(mat) == false && mat != null)
                     {
                         uniqueMaterials.Add(mat);
@@ -75,10 +73,8 @@ namespace UnityFBXExporter
                 }
             }
 
-            for (var i = 0; i < uniqueMaterials.Count; i++)
+            foreach (var mat in uniqueMaterials)
             {
-                var mat = uniqueMaterials[i];
-
                 // We rename the material if it is being copied
                 var materialName = mat.name;
                 if (copyMaterials)
@@ -130,7 +126,7 @@ namespace UnityFBXExporter
                             break;
 
                         case 1: // Map is a cutout
-                                //  TODO: Add option if it is a cutout
+                            //  TODO: Add option if it is a cutout
                             break;
 
                         case 2: // Map is a fade
@@ -220,7 +216,7 @@ namespace UnityFBXExporter
             string newObjects;
             string newConnections;
 
-            // Serializeds the Main Texture, one of two textures that can be stored in FBX's sysytem
+            // Serializes the Main Texture, one of two textures that can be stored in FBX's system
             if (mainTexture != null)
             {
                 SerializeOneTexture(gameObj, newPath, material, materialName, materialId, copyTextures, "_MainTex", "DiffuseColor", out newObjects, out newConnections);
