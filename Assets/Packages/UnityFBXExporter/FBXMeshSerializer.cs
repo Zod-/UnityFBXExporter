@@ -50,10 +50,8 @@ namespace UnityFBXExporter
         {
             var modelId = FBXExporter.GetRandomFBXId();
             var mesh = GetMesh(gameObject);
-            var meshName = mesh == null ? gameObject.name : mesh.name;
-            var modelType = mesh == null ? "Null" : "Mesh";
 
-            ModelDefinition(gameObject, parentModelId, objectsSb, connectionsSb, modelId, meshName, modelType);
+            SerializeObject(gameObject, mesh, modelId, parentModelId, objectsSb, connectionsSb);
             if (mesh)
             {
                 FBXMeshPropertySerializer.Serialize(mesh, gameObject.GetComponent<MeshRenderer>(), modelId, objectsSb, connectionsSb);
@@ -63,9 +61,15 @@ namespace UnityFBXExporter
             for (var i = 0; i < gameObject.transform.childCount; i++)
             {
                 var childObject = gameObject.transform.GetChild(i).gameObject;
-
                 SerializeCore(childObject, modelId, objectsSb, connectionsSb);
             }
+        }
+
+        private static void SerializeObject(GameObject gameObject, Mesh mesh, long modelId, long parentModelId, StringBuilder objectsSb, StringBuilder connectionsSb)
+        {
+            Header(gameObject, mesh, parentModelId, modelId, objectsSb, connectionsSb);
+            LocalTransformOffset(gameObject, objectsSb);
+            Footer(objectsSb);
         }
 
         private static Mesh GetMesh(GameObject gameObject)
@@ -74,15 +78,10 @@ namespace UnityFBXExporter
             return filter == null ? null : filter.sharedMesh;
         }
 
-        private static void ModelDefinition(GameObject gameObject, long parentModelId, StringBuilder objectsSb, StringBuilder connectionsSb, long modelId, string meshName, string isMesh)
+        private static void Header(GameObject gameObject, Mesh mesh, long parentModelId, long modelId, StringBuilder objectsSb, StringBuilder connectionsSb)
         {
-            Header(gameObject, parentModelId, modelId, meshName, isMesh, objectsSb, connectionsSb);
-            LocalTransformOffset(gameObject, objectsSb);
-            Footer(objectsSb);
-        }
-
-        private static void Header(GameObject gameObject, long parentModelId, long modelId, string meshName, string modelType, StringBuilder objectsSb, StringBuilder connectionsSb)
-        {
+            var meshName = mesh == null ? gameObject.name : mesh.name;
+            var modelType = mesh == null ? "Null" : "Mesh";
             if (parentModelId == 0)
             {
                 connectionsSb.AppendLine("\t;Model::" + meshName + ", Model::RootNode");
@@ -118,7 +117,7 @@ namespace UnityFBXExporter
             }
         }
 
-        public static void LocalTransformOffset(GameObject gameObject, StringBuilder objectsSb)
+        private static void LocalTransformOffset(GameObject gameObject, StringBuilder objectsSb)
         {
             // ===== Local Translation Offset =========
             var position = gameObject.transform.localPosition;
