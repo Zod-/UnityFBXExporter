@@ -101,10 +101,6 @@ namespace UnityFBXExporter
             {
                 SerializeColor(mesh, triangles, objectsSb);
             }
-            else
-            {
-                Debug.LogWarning("Mesh contains " + mesh.vertices.Length + " vertices for " + mesh.colors.Length + " colors. Skip color export");
-            }
         }
 
         private static void SerializeTriangles(int[] triangles, StringBuilder objectsSb)
