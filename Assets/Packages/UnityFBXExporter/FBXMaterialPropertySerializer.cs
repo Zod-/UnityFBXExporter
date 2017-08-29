@@ -5,7 +5,7 @@ namespace UnityFBXExporter
 {
     public static class FBXMaterialPropertySerializer
     {
-        public static void SerializeMaterial(Material mat, StringBuilder tempObjectSb)
+        public static void Serialize(Material mat, StringBuilder tempObjectSb)
         {
             SerializeMetallicGlossMap();
             SerializeSpecColor(mat, tempObjectSb);

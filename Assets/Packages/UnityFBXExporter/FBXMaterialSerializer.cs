@@ -55,9 +55,9 @@ namespace UnityFBXExporter
             {
                 var materialName = GetMaterialName(gameObj.name, mat.name, copyMaterials);
                 MaterialHeader(mat, materialName, objectSb);
-                FBXMaterialPropertySerializer.SerializeMaterial(mat, objectSb);
+                FBXMaterialPropertySerializer.Serialize(mat, objectSb);
                 MaterialFooter(objectSb);
-                FBXTextureSerializer.SerializeTextures(newPath, mat, materialName, objectSb, connectionsSb, copyTextures);
+                FBXTextureSerializer.Serialize(newPath, mat, materialName, objectSb, connectionsSb, copyTextures);
             }
         }
 
