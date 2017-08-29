@@ -39,14 +39,12 @@ namespace UnityFBXExporter
         /// <param name="gameObj">Parent GameObject being exported.</param>
         /// <param name="newPath">The path to export to.</param>
         /// <param name="copyTextures">Should textures be copied</param>
-        /// <param name="materials">Materials which were written to this fbx file.</param>
         /// <param name="objectSb">The material objects to write to the file.</param>
         /// <param name="connectionsSb">The connections to write to the file.</param>
         /// <param name="copyMaterials">Should materials be copied</param>
-        public static void GetAllMaterialsToString(GameObject gameObj, string newPath, out Material[] materials, StringBuilder objectSb, StringBuilder connectionsSb, bool copyMaterials = false, bool copyTextures = false)
+        public static void Serialize(GameObject gameObj, string newPath, StringBuilder objectSb, StringBuilder connectionsSb, bool copyMaterials = false, bool copyTextures = false)
         {
-            materials = GetUniqueMaterials(gameObj).ToArray();
-            foreach (var mat in materials)
+            foreach (var mat in GetUniqueMaterials(gameObj))
             {
                 var materialName = GetMaterialName(gameObj.name, mat.name, copyMaterials);
                 MaterialHeader(mat, materialName, objectSb);
