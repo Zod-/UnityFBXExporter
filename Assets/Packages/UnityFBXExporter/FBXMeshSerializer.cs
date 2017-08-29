@@ -31,7 +31,7 @@ using System.Collections.Generic;
 
 namespace UnityFBXExporter
 {
-    public static class FBXUnityMeshGetter
+    public static class FBXMeshSerializer
     {
         /// <summary>
         /// Gets all the meshes and outputs to a string (even grabbing the child of each gameObject)
@@ -41,7 +41,7 @@ namespace UnityFBXExporter
         /// <param name="objectsSb">The StringBuidler to create objects for the FBX file.</param>
         /// <param name="connectionsSb">The StringBuidler to create connections for the FBX file.</param>
         /// <param name="parentModelId">Parent model id, 0 if top parent.</param>
-        public static void GetMeshToString(GameObject gameObj, StringBuilder objectsSb, StringBuilder connectionsSb, long parentModelId = 0)
+        public static void Serialize(GameObject gameObj, StringBuilder objectsSb, StringBuilder connectionsSb, long parentModelId = 0)
         {
             var geometryId = FBXExporter.GetRandomFBXId();
             var modelId = FBXExporter.GetRandomFBXId();
@@ -490,7 +490,7 @@ namespace UnityFBXExporter
             {
                 var childObject = gameObj.transform.GetChild(i).gameObject;
 
-                GetMeshToString(childObject, objectsSb, connectionsSb, modelId);
+                Serialize(childObject, objectsSb, connectionsSb, modelId);
             }
         }
     }

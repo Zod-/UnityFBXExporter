@@ -40,6 +40,21 @@ namespace UnityFBXExporter
 {
     public static class FBXExporter
     {
+        public static string MeshToString(GameObject[] gameObjects, string newPath, bool copyMaterials = false, bool copyTextures = false)
+        {
+            var sb = new StringBuilder();
+            FBXFileHeaderDefinition.Serialize(newPath, sb);
+
+            var objectProps = new StringBuilder();
+            var objectConnections = new StringBuilder();
+            FBXObjectSerializer.Serialize(gameObjects, newPath, copyMaterials, copyTextures, objectProps, objectConnections);
+
+            sb.Append(objectProps);
+            sb.Append(objectConnections);
+
+            return sb.ToString();
+        }
+
         public static bool ExportGameObjToFBX(GameObject[] gameObjects, string newPath, bool copyMaterials = false, bool copyTextures = false)
         {
             // Check to see if the extension is right
@@ -108,22 +123,7 @@ namespace UnityFBXExporter
             return BitConverter.ToInt64(Guid.NewGuid().ToByteArray(), 0);
         }
 
-        public static string MeshToString(GameObject[] gameObjects, string newPath, bool copyMaterials = false, bool copyTextures = false)
-        {
-            var sb = new StringBuilder();
-            FBXFileHeaderDefinition.Serialize(newPath, sb);
-
-            var objectProps = new StringBuilder();
-            var objectConnections = new StringBuilder();
-            FBXObjectSerializer.Serialize(gameObjects, newPath, copyMaterials, copyTextures, objectProps, objectConnections);
-
-            sb.Append(objectProps);
-            sb.Append(objectConnections);
-
-            return sb.ToString();
-        }
-
-        public static void CopyComplexMaterialsToPath(GameObject gameObj, string path, bool copyTextures, string texturesFolder = "/Textures", string materialsFolder = "/Materials")
+        private static void CopyComplexMaterialsToPath(GameObject gameObj, string path, bool copyTextures, string texturesFolder = "/Textures", string materialsFolder = "/Materials")
         {
 #if UNITY_EDITOR
             var folderIndex = path.LastIndexOf('/');
@@ -232,7 +232,7 @@ namespace UnityFBXExporter
 #endif
         }
 
-        public static bool CopyAndRenameAsset(Object obj, string newName, string newFolderPath)
+        private static bool CopyAndRenameAsset(Object obj, string newName, string newFolderPath)
         {
 #if UNITY_EDITOR
             var path = newFolderPath;
@@ -325,7 +325,7 @@ namespace UnityFBXExporter
             }
         }
 
-        public static Object CopyAndRenameAssetReturnObject(Object obj, string newName, string newFolderPath)
+        private static Object CopyAndRenameAssetReturnObject(Object obj, string newName, string newFolderPath)
         {
 #if UNITY_EDITOR
             var path = newFolderPath;

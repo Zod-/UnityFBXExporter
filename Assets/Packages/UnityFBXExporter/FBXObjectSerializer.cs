@@ -42,7 +42,7 @@ namespace UnityFBXExporter
                 FBXMaterialSerializer.Serialize(gameObject, newPath, objectProps, objectConnections, copyMaterials, copyTextures);
 
                 // Run recursive FBX Mesh grab over the entire gameObject
-                FBXUnityMeshGetter.GetMeshToString(gameObject, objectProps, objectConnections);
+                FBXMeshSerializer.Serialize(gameObject, objectProps, objectConnections);
             }
 
             ObjectFooter(objectProps);
