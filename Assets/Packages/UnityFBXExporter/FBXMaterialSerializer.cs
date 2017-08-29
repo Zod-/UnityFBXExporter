@@ -100,7 +100,7 @@ namespace UnityFBXExporter
         /// <returns>List of unique materials</returns>
         public static IEnumerable<Material> GetUniqueMaterials(GameObject gameObj)
         {
-            return gameObj.GetComponentsInChildren<Renderer>().Select(r => r.sharedMaterial).Where(m => m).Distinct();
+            return gameObj.GetComponentsInChildren<Renderer>().SelectMany(r => r.sharedMaterials).Where(m => m).Distinct();
         }
     }
 }
