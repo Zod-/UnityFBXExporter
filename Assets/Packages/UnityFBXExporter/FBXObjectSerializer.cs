@@ -38,11 +38,10 @@ namespace UnityFBXExporter
             ConnectionsHeader(objectConnections);
             foreach (var gameObject in gameObjects)
             {
-                // First finds all unique materials and compiles them (and writes to the object connections) for funzies
-                FBXMaterialSerializer.Serialize(gameObject, newPath, objectProps, objectConnections, copyMaterials, copyTextures);
-
                 // Run recursive FBX Mesh grab over the entire gameObject
                 FBXMeshSerializer.Serialize(gameObject, objectProps, objectConnections);
+                // First finds all unique materials and compiles them (and writes to the object connections) for funzies
+                FBXMaterialSerializer.Serialize(gameObject, newPath, objectProps, objectConnections, copyMaterials, copyTextures);
             }
 
             ObjectFooter(objectProps);
