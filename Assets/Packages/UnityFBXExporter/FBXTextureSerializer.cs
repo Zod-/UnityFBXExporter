@@ -45,7 +45,7 @@ namespace UnityFBXExporter
         /// <param name="materialName"></param>
         /// <param name="objectsSb"></param>
         /// <param name="connectionsSb"></param>
-        public static void SerializedTextures(string newPath, Material material, string materialName, StringBuilder objectsSb, StringBuilder connectionsSb, bool copyTextures = false)
+        public static void SerializeTextures(string newPath, Material material, string materialName, StringBuilder objectsSb, StringBuilder connectionsSb, bool copyTextures = false)
         {
             // TODO: FBX import currently only supports Diffuse Color and Normal Map
             // Because it is undocumented, there is no way to easily find out what other textures

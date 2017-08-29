@@ -57,7 +57,7 @@ namespace UnityFBXExporter
                 MaterialHeader(mat, materialName, objectSb);
                 FBXMaterialPropertySerializer.SerializeMaterial(mat, objectSb);
                 MaterialFooter(objectSb);
-                FBXTextureSerializer.SerializedTextures(newPath, mat, materialName, objectSb, connectionsSb, copyTextures);
+                FBXTextureSerializer.SerializeTextures(newPath, mat, materialName, objectSb, connectionsSb, copyTextures);
             }
         }
 
