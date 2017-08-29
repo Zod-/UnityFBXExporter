@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEditor;
 
-public class ProceduralTest : MonoBehaviour 
+public static class ProceduralTest
 {
 
 	[MenuItem("Assets/FBX Exporter/Create Object With Procedural Texture", false, 43)]
