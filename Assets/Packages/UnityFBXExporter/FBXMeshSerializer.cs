@@ -27,7 +27,6 @@
 
 using UnityEngine;
 using System.Text;
-using System.Collections.Generic;
 
 namespace UnityFBXExporter
 {
@@ -37,47 +36,53 @@ namespace UnityFBXExporter
         /// Gets all the meshes and outputs to a string (even grabbing the child of each gameObject)
         /// </summary>
         /// <returns>The mesh to string.</returns>
-        /// <param name="gameObj">GameObject Parent.</param>
-        /// <param name="objectsSb">The StringBuidler to create objects for the FBX file.</param>
-        /// <param name="connectionsSb">The StringBuidler to create connections for the FBX file.</param>
+        /// <param name="gameObject">GameObject Parent.</param>
+        /// <param name="objectsSb">The StringBuilder to create objects for the FBX file.</param>
+        /// <param name="connectionsSb">The StringBuilder to create connections for the FBX file.</param>
         /// <param name="parentModelId">Parent model id, 0 if top parent.</param>
-        public static void Serialize(GameObject gameObj, StringBuilder objectsSb, StringBuilder connectionsSb, long parentModelId = 0)
+        public static void Serialize(GameObject gameObject, StringBuilder objectsSb, StringBuilder connectionsSb, long parentModelId = 0)
         {
-            var geometryId = FBXExporter.GetRandomFBXId();
+            EnsureMeshFilterInSkinnedRenderer(gameObject);
+            SerializeCore(gameObject, parentModelId, objectsSb, connectionsSb);
+        }
+
+        private static void SerializeCore(GameObject gameObject, long parentModelId, StringBuilder objectsSb, StringBuilder connectionsSb)
+        {
             var modelId = FBXExporter.GetRandomFBXId();
-            //@cartzhang if SkinnedMeshRender gameobject,but has no meshfilter,add one.            
-            var meshfilterRender = gameObj.GetComponentsInChildren<SkinnedMeshRenderer>();
-            for (var i = 0; i < meshfilterRender.Length; i++)
+            var mesh = GetMesh(gameObject);
+            var meshName = mesh == null ? gameObject.name : mesh.name;
+            var modelType = mesh == null ? "Null" : "Mesh";
+
+            ModelDefinition(gameObject, parentModelId, objectsSb, connectionsSb, modelId, meshName, modelType);
+            if (mesh)
             {
-                if (meshfilterRender[i].GetComponent<MeshFilter>() == null)
-                {
-                    meshfilterRender[i].gameObject.AddComponent<MeshFilter>();
-                    meshfilterRender[i].GetComponent<MeshFilter>().sharedMesh = Object.Instantiate(meshfilterRender[i].sharedMesh);
-                }
+                FBXMeshPropertySerializer.Serialize(mesh, gameObject.GetComponent<MeshRenderer>(), modelId, objectsSb, connectionsSb);
             }
 
-            // Sees if there is a mesh to export and add to the system
-            var filter = gameObj.GetComponent<MeshFilter>();
-
-            var meshName = gameObj.name;
-
-            // A NULL parent means that the gameObject is at the top
-            var isMesh = "Null";
-
-            if (filter != null)
+            // Recursively add all the other objects to the string that has been built.
+            for (var i = 0; i < gameObject.transform.childCount; i++)
             {
-                if (filter.sharedMesh == null)
-                {
-                    // The MeshFilter has no mesh assigned, so treat it like an FBX Null node.
-                    filter = null;
-                }
-                else
-                {
-                    meshName = filter.sharedMesh.name;
-                    isMesh = "Mesh";
-                }
-            }
+                var childObject = gameObject.transform.GetChild(i).gameObject;
 
+                SerializeCore(childObject, modelId, objectsSb, connectionsSb);
+            }
+        }
+
+        private static Mesh GetMesh(GameObject gameObject)
+        {
+            var filter = gameObject.GetComponent<MeshFilter>();
+            return filter == null ? null : filter.sharedMesh;
+        }
+
+        private static void ModelDefinition(GameObject gameObject, long parentModelId, StringBuilder objectsSb, StringBuilder connectionsSb, long modelId, string meshName, string isMesh)
+        {
+            Header(gameObject, parentModelId, modelId, meshName, isMesh, objectsSb, connectionsSb);
+            LocalTransformOffset(gameObject, objectsSb);
+            Footer(objectsSb);
+        }
+
+        private static void Header(GameObject gameObject, long parentModelId, long modelId, string meshName, string modelType, StringBuilder objectsSb, StringBuilder connectionsSb)
+        {
             if (parentModelId == 0)
             {
                 connectionsSb.AppendLine("\t;Model::" + meshName + ", Model::RootNode");
@@ -88,7 +93,7 @@ namespace UnityFBXExporter
             }
             connectionsSb.AppendLine("\tC: \"OO\"," + modelId + "," + parentModelId);
             connectionsSb.AppendLine();
-            objectsSb.AppendLine("\tModel: " + modelId + ", \"Model::" + gameObj.name + "\", \"" + isMesh + "\" {");
+            objectsSb.AppendLine("\tModel: " + modelId + ", \"Model::" + gameObject.name + "\", \"" + modelType + "\" {");
             objectsSb.AppendLine("\t\tVersion: 232");
             objectsSb.AppendLine("\t\tProperties70:  {");
             objectsSb.AppendLine("\t\t\tP: \"RotationOrder\", \"enum\", \"\", \"\",4");
@@ -96,8 +101,27 @@ namespace UnityFBXExporter
             objectsSb.AppendLine("\t\t\tP: \"InheritType\", \"enum\", \"\", \"\",1");
             objectsSb.AppendLine("\t\t\tP: \"ScalingMax\", \"Vector3D\", \"Vector\", \"\",0,0,0");
             objectsSb.AppendLine("\t\t\tP: \"DefaultAttributeIndex\", \"int\", \"Integer\", \"\",0");
+        }
+
+        /// <summary>
+        /// Ensures that skinned mesh renders have a meshFilter on all gameObjects in the hierarchy
+        /// </summary>
+        /// <param name="gameObject">Root gameObject where to start traversing</param>
+        private static void EnsureMeshFilterInSkinnedRenderer(GameObject gameObject)
+        {
+            var meshFilterRender = gameObject.GetComponentsInChildren<SkinnedMeshRenderer>();
+            foreach (var skinnedMeshRenderer in meshFilterRender)
+            {
+                if (skinnedMeshRenderer.GetComponent<MeshFilter>() != null) { continue; }
+                skinnedMeshRenderer.gameObject.AddComponent<MeshFilter>();
+                skinnedMeshRenderer.GetComponent<MeshFilter>().sharedMesh = Object.Instantiate(skinnedMeshRenderer.sharedMesh);
+            }
+        }
+
+        public static void LocalTransformOffset(GameObject gameObject, StringBuilder objectsSb)
+        {
             // ===== Local Translation Offset =========
-            var position = gameObj.transform.localPosition;
+            var position = gameObject.transform.localPosition;
 
             objectsSb.Append("\t\t\tP: \"Lcl Translation\", \"Lcl Translation\", \"\", \"A+\",");
 
@@ -106,392 +130,23 @@ namespace UnityFBXExporter
             objectsSb.AppendLine();
 
             // Rotates the object correctly from Unity space
-            var localRotation = gameObj.transform.localEulerAngles;
+            var localRotation = gameObject.transform.localEulerAngles;
             objectsSb.AppendFormat("\t\t\tP: \"Lcl Rotation\", \"Lcl Rotation\", \"\", \"A+\",{0},{1},{2}", localRotation.x, localRotation.y * -1, -1 * localRotation.z);
             objectsSb.AppendLine();
 
             // Adds the local scale of this object
-            var localScale = gameObj.transform.localScale;
+            var localScale = gameObject.transform.localScale;
             objectsSb.AppendFormat("\t\t\tP: \"Lcl Scaling\", \"Lcl Scaling\", \"\", \"A\",{0},{1},{2}", localScale.x, localScale.y, localScale.z);
             objectsSb.AppendLine();
+        }
 
+        private static void Footer(StringBuilder objectsSb)
+        {
             objectsSb.AppendLine("\t\t\tP: \"currentUVSet\", \"KString\", \"\", \"U\", \"map1\"");
             objectsSb.AppendLine("\t\t}");
             objectsSb.AppendLine("\t\tShading: T");
             objectsSb.AppendLine("\t\tCulling: \"CullingOff\"");
             objectsSb.AppendLine("\t}");
-
-
-            // Adds in geometry if it exists, if it it does not exist, this is a empty gameObject file and skips over this
-            if (filter != null)
-            {
-                var mesh = filter.sharedMesh;
-
-                // =================================
-                //         General Geometry Info
-                // =================================
-                // Generate the geometry information for the mesh created
-
-                objectsSb.AppendLine("\tGeometry: " + geometryId + ", \"Geometry::\", \"Mesh\" {");
-
-                // ===== WRITE THE VERTICIES =====
-                var verticies = mesh.vertices;
-                var vertCount = mesh.vertexCount * 3; // <= because the list of points is just a list of comma seperated values, we need to multiply by three
-
-                objectsSb.AppendLine("\t\tVertices: *" + vertCount + " {");
-                objectsSb.Append("\t\t\ta: ");
-                for (var i = 0; i < verticies.Length; i++)
-                {
-                    if (i > 0)
-                    {
-                        objectsSb.Append(",");
-                    }
-
-                    // Points in the verticies. We also reverse the x value because Unity has a reverse X coordinate
-                    objectsSb.AppendFormat("{0},{1},{2}", verticies[i].x * -1, verticies[i].y, verticies[i].z);
-                }
-
-                objectsSb.AppendLine();
-                objectsSb.AppendLine("\t\t} ");
-
-                // ======= WRITE THE TRIANGLES ========
-                var triangleCount = mesh.triangles.Length;
-                var triangles = mesh.triangles;
-
-                objectsSb.AppendLine("\t\tPolygonVertexIndex: *" + triangleCount + " {");
-
-                // Write triangle indexes
-                objectsSb.Append("\t\t\ta: ");
-                for (var i = 0; i < triangleCount; i += 3)
-                {
-                    if (i > 0)
-                    {
-                        objectsSb.Append(",");
-                    }
-
-                    // To get the correct normals, must rewind the triangles since we flipped the x direction
-                    objectsSb.AppendFormat("{0},{1},{2}",
-                                              triangles[i],
-                                              triangles[i + 2],
-                                              (triangles[i + 1] * -1) - 1); // <= Tells the poly is ended
-
-                }
-
-                objectsSb.AppendLine();
-
-                objectsSb.AppendLine("\t\t} ");
-                objectsSb.AppendLine("\t\tGeometryVersion: 124");
-                objectsSb.AppendLine("\t\tLayerElementNormal: 0 {");
-                objectsSb.AppendLine("\t\t\tVersion: 101");
-                objectsSb.AppendLine("\t\t\tName: \"\"");
-                objectsSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
-                objectsSb.AppendLine("\t\t\tReferenceInformationType: \"Direct\"");
-
-                // ===== WRITE THE NORMALS ==========
-                var normals = mesh.normals;
-
-                objectsSb.AppendLine("\t\t\tNormals: *" + (triangleCount * 3) + " {");
-                objectsSb.Append("\t\t\t\ta: ");
-
-                for (var i = 0; i < triangleCount; i += 3)
-                {
-                    if (i > 0)
-                    {
-                        objectsSb.Append(",");
-                    }
-
-                    // To get the correct normals, must rewind the normal triangles like the triangles above since x was flipped
-                    var newNormal = normals[triangles[i]];
-
-                    objectsSb.AppendFormat("{0},{1},{2},",
-                                             newNormal.x * -1, // Switch normal as is tradition
-                                             newNormal.y,
-                                             newNormal.z);
-
-                    newNormal = normals[triangles[i + 2]];
-
-                    objectsSb.AppendFormat("{0},{1},{2},",
-                                              newNormal.x * -1, // Switch normal as is tradition
-                                              newNormal.y,
-                                              newNormal.z);
-
-                    newNormal = normals[triangles[i + 1]];
-
-                    objectsSb.AppendFormat("{0},{1},{2}",
-                                              newNormal.x * -1, // Switch normal as is tradition
-                                              newNormal.y,
-                                              newNormal.z);
-                }
-
-                objectsSb.AppendLine();
-                objectsSb.AppendLine("\t\t\t}");
-                objectsSb.AppendLine("\t\t}");
-
-                // ===== WRITE THE COLORS =====
-                var containsColors = mesh.colors.Length == verticies.Length;
-
-                if (containsColors)
-                {
-                    var colors = mesh.colors;
-
-                    var colorTable = new Dictionary<Color, int>(); // reducing amount of data by only keeping unique colors.
-                    var idx = 0;
-
-                    // build index table of all the different colors present in the mesh            
-                    foreach (var color in colors)
-                    {
-                        if (colorTable.ContainsKey(color)) { continue; }
-                        colorTable[color] = idx;
-                        idx++;
-                    }
-
-                    objectsSb.AppendLine("\t\tLayerElementColor: 0 {");
-                    objectsSb.AppendLine("\t\t\tVersion: 101");
-                    objectsSb.AppendLine("\t\t\tName: \"Col\"");
-                    objectsSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
-                    objectsSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
-                    objectsSb.AppendLine("\t\t\tColors: *" + colorTable.Count * 4 + " {");
-                    objectsSb.Append("\t\t\t\ta: ");
-
-                    var first = true;
-                    foreach (var color in colorTable)
-                    {
-                        if (!first)
-                        {
-                            objectsSb.Append(",");
-                        }
-
-                        objectsSb.AppendFormat("{0},{1},{2},{3}", color.Key.r, color.Key.g, color.Key.b, color.Key.a);
-                        first = false;
-                    }
-                    objectsSb.AppendLine();
-
-                    objectsSb.AppendLine("\t\t\t\t}");
-
-                    // Color index
-                    objectsSb.AppendLine("\t\t\tColorIndex: *" + triangles.Length + " {");
-                    objectsSb.Append("\t\t\t\ta: ");
-
-                    for (var i = 0; i < triangles.Length; i += 3)
-                    {
-                        if (i > 0)
-                        {
-                            objectsSb.Append(",");
-                        }
-
-                        // Triangles need to be fliped for the x flip
-                        var index1 = triangles[i];
-                        var index2 = triangles[i + 2];
-                        var index3 = triangles[i + 1];
-
-                        // Find the color index related to that vertice index
-                        index1 = colorTable[colors[index1]];
-                        index2 = colorTable[colors[index2]];
-                        index3 = colorTable[colors[index3]];
-
-                        objectsSb.AppendFormat("{0},{1},{2}", index1, index2, index3);
-                    }
-
-                    objectsSb.AppendLine();
-
-                    objectsSb.AppendLine("\t\t\t}");
-                    objectsSb.AppendLine("\t\t}");
-                }
-                else
-                {
-                    Debug.LogWarning("Mesh contains " + mesh.vertices.Length + " vertices for " + mesh.colors.Length + " colors. Skip color export");
-                }
-
-
-                // ================ UV CREATION =========================
-
-                // -- UV 1 Creation
-                var uvLength = mesh.uv.Length;
-                var uvs = mesh.uv;
-
-                objectsSb.AppendLine("\t\tLayerElementUV: 0 {"); // the Zero here is for the first UV map
-                objectsSb.AppendLine("\t\t\tVersion: 101");
-                objectsSb.AppendLine("\t\t\tName: \"map1\"");
-                objectsSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
-                objectsSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
-                objectsSb.AppendLine("\t\t\tUV: *" + uvLength * 2 + " {");
-                objectsSb.Append("\t\t\t\ta: ");
-
-                for (var i = 0; i < uvLength; i++)
-                {
-                    if (i > 0)
-                    {
-                        objectsSb.Append(",");
-                    }
-
-                    objectsSb.AppendFormat("{0},{1}", uvs[i].x, uvs[i].y);
-
-                }
-                objectsSb.AppendLine();
-
-                objectsSb.AppendLine("\t\t\t\t}");
-
-                // UV tile index coords
-                objectsSb.AppendLine("\t\t\tUVIndex: *" + triangleCount + " {");
-                objectsSb.Append("\t\t\t\ta: ");
-
-                for (var i = 0; i < triangleCount; i += 3)
-                {
-                    if (i > 0)
-                    {
-                        objectsSb.Append(",");
-                    }
-
-                    // Triangles need to be fliped for the x flip
-                    var index1 = triangles[i];
-                    var index2 = triangles[i + 2];
-                    var index3 = triangles[i + 1];
-
-                    objectsSb.AppendFormat("{0},{1},{2}", index1, index2, index3);
-                }
-
-                objectsSb.AppendLine();
-
-                objectsSb.AppendLine("\t\t\t}");
-                objectsSb.AppendLine("\t\t}");
-
-                // -- UV 2 Creation
-                // TODO: Add UV2 Creation here
-
-                // -- Smoothing
-                // TODO: Smoothing doesn't seem to do anything when importing. This maybe should be added. -KBH
-
-                // ============ MATERIALS =============
-
-                objectsSb.AppendLine("\t\tLayerElementMaterial: 0 {");
-                objectsSb.AppendLine("\t\t\tVersion: 101");
-                objectsSb.AppendLine("\t\t\tName: \"\"");
-                objectsSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygon\"");
-                objectsSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
-
-                var totalFaceCount = 0;
-
-                // So by polygon means that we need 1/3rd of how many indicies we wrote.
-                var numberOfSubmeshes = mesh.subMeshCount;
-
-                var submeshesSb = new StringBuilder();
-
-                // For just one submesh, we set them all to zero
-                if (numberOfSubmeshes == 1)
-                {
-                    var numFaces = triangles.Length / 3;
-
-                    for (var i = 0; i < numFaces; i++)
-                    {
-                        submeshesSb.Append("0,");
-                        totalFaceCount++;
-                    }
-                }
-                else
-                {
-                    var allSubmeshes = new List<int[]>();
-
-                    // Load all submeshes into a space
-                    for (var i = 0; i < numberOfSubmeshes; i++)
-                    {
-                        allSubmeshes.Add(mesh.GetIndices(i));
-                    }
-
-                    // TODO: Optimize this search pattern
-                    for (var i = 0; i < triangles.Length; i += 3)
-                    {
-                        for (var subMeshIndex = 0; subMeshIndex < allSubmeshes.Count; subMeshIndex++)
-                        {
-                            for (var n = 0; n < allSubmeshes[subMeshIndex].Length; n += 3)
-                            {
-                                if (triangles[i] == allSubmeshes[subMeshIndex][n]
-                                   && triangles[i + 1] == allSubmeshes[subMeshIndex][n + 1]
-                                   && triangles[i + 2] == allSubmeshes[subMeshIndex][n + 2])
-                                {
-                                    submeshesSb.Append(subMeshIndex.ToString());
-                                    submeshesSb.Append(",");
-                                    totalFaceCount++;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                objectsSb.AppendLine("\t\t\tMaterials: *" + totalFaceCount + " {");
-                objectsSb.Append("\t\t\t\ta: ");
-                objectsSb.AppendLine(submeshesSb.ToString());
-                objectsSb.AppendLine("\t\t\t} ");
-                objectsSb.AppendLine("\t\t}");
-
-                // ============= INFORMS WHAT TYPE OF LATER ELEMENTS ARE IN THIS GEOMETRY =================
-                objectsSb.AppendLine("\t\tLayer: 0 {");
-                objectsSb.AppendLine("\t\t\tVersion: 100");
-                objectsSb.AppendLine("\t\t\tLayerElement:  {");
-                objectsSb.AppendLine("\t\t\t\tType: \"LayerElementNormal\"");
-                objectsSb.AppendLine("\t\t\t\tTypedIndex: 0");
-                objectsSb.AppendLine("\t\t\t}");
-                objectsSb.AppendLine("\t\t\tLayerElement:  {");
-                objectsSb.AppendLine("\t\t\t\tType: \"LayerElementMaterial\"");
-                objectsSb.AppendLine("\t\t\t\tTypedIndex: 0");
-                objectsSb.AppendLine("\t\t\t}");
-                objectsSb.AppendLine("\t\t\tLayerElement:  {");
-                objectsSb.AppendLine("\t\t\t\tType: \"LayerElementTexture\"");
-                objectsSb.AppendLine("\t\t\t\tTypedIndex: 0");
-                objectsSb.AppendLine("\t\t\t}");
-                if (containsColors)
-                {
-                    objectsSb.AppendLine("\t\t\tLayerElement:  {");
-                    objectsSb.AppendLine("\t\t\t\tType: \"LayerElementColor\"");
-                    objectsSb.AppendLine("\t\t\t\tTypedIndex: 0");
-                    objectsSb.AppendLine("\t\t\t}");
-                }
-                objectsSb.AppendLine("\t\t\tLayerElement:  {");
-                objectsSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
-                objectsSb.AppendLine("\t\t\t\tTypedIndex: 0");
-                objectsSb.AppendLine("\t\t\t}");
-                // TODO: Here we would add UV layer 1 for ambient occlusion UV file
-                //			objectsSb.AppendLine("\t\t\tLayerElement:  {");
-                //			objectsSb.AppendLine("\t\t\t\tType: \"LayerElementUV\"");
-                //			objectsSb.AppendLine("\t\t\t\tTypedIndex: 1");
-                //			objectsSb.AppendLine("\t\t\t}");
-                objectsSb.AppendLine("\t\t}");
-                objectsSb.AppendLine("\t}");
-
-                // Add the connection for the model to the geometry so it is attached the right mesh
-                connectionsSb.AppendLine("\t;Geometry::, Model::" + mesh.name);
-                connectionsSb.AppendLine("\tC: \"OO\"," + geometryId + "," + modelId);
-                connectionsSb.AppendLine();
-
-                // Add the connection of all the materials in order of submesh
-                var meshRenderer = gameObj.GetComponent<MeshRenderer>();
-                if (meshRenderer != null)
-                {
-                    var allMaterialsInThisMesh = meshRenderer.sharedMaterials;
-
-                    foreach (var mat in allMaterialsInThisMesh)
-                    {
-                        if (mat == null)
-                        {
-                            Debug.LogError("ERROR: the game object " + gameObj.name + " has an empty material on it. This will export problematic files. Please fix and reexport");
-                            continue;
-                        }
-                        var referenceId = Mathf.Abs(mat.GetInstanceID());
-                        connectionsSb.AppendLine("\t;Material::" + mat.name + ", Model::" + mesh.name);
-                        connectionsSb.AppendLine("\tC: \"OO\"," + referenceId + "," + modelId);
-                        connectionsSb.AppendLine();
-                    }
-                }
-
-            }
-
-            // Recursively add all the other objects to the string that has been built.
-            for (var i = 0; i < gameObj.transform.childCount; i++)
-            {
-                var childObject = gameObj.transform.GetChild(i).gameObject;
-
-                Serialize(childObject, objectsSb, connectionsSb, modelId);
-            }
         }
     }
 }
