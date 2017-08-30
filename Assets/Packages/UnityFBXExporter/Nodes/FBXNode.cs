@@ -5,9 +5,9 @@ namespace UnityFBXExporter
 {
     public abstract class FBXNode : FBXNodeList
     {
-        public int Id { get { return -1; } }
+        public long Id { get { return -1; } set { } }
         public string Class { get { return string.Empty; } }
-        public string SubClass { get { return string.Empty; } }
+        public string SubClass { get { return string.Empty; } set { } }
         public int Count { get { return -1; } }
 
         public object Value;
