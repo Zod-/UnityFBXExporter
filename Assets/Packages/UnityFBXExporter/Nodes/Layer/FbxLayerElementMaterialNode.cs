@@ -5,18 +5,18 @@ namespace UnityFBXExporter
 {
     public class FbxLayerElementMaterialNode : FbxLayerElementBaseNode
     {
-        private readonly Mesh _mesh;
+        private readonly MeshCache _cache;
 
-        public FbxLayerElementMaterialNode(int layer, Mesh mesh) : base("LayerElementMaterial", layer, "", "ByPolygon", "IndexToDirect")
+        public FbxLayerElementMaterialNode(int layer, MeshCache cache) : base("LayerElementMaterial", layer, "", "ByPolygon", "IndexToDirect")
         {
-            _mesh = mesh;
+            _cache = cache;
             Materials();
         }
 
         public void Materials()
         {
-            var triangles = _mesh.triangles;
-            var numberOfSubMeshes = _mesh.subMeshCount;
+            var triangles = _cache.Triangles;
+            var numberOfSubMeshes = _cache.Mesh.subMeshCount;
             var materials = new List<int>(triangles.Length);
 
             // For just one subMesh, we set them all to zero
@@ -27,7 +27,7 @@ namespace UnityFBXExporter
                 // Load all subMeshes into a space
                 for (var i = 0; i < numberOfSubMeshes; i++)
                 {
-                    allSubMeshes.Add(_mesh.GetIndices(i));
+                    allSubMeshes.Add(_cache.Mesh.GetIndices(i));
                 }
 
                 materials.AddRange(FindSubMeshIndex(triangles, allSubMeshes));
@@ -53,8 +53,8 @@ namespace UnityFBXExporter
                     for (var n = 0; n < allSubMeshes[subMeshIndex].Length; n += 3)
                     {
                         if (triangles[i] != allSubMeshes[subMeshIndex][n] ||
-                            triangles[i + 1] != allSubMeshes[subMeshIndex][n + 1] ||
-                            triangles[i + 2] != allSubMeshes[subMeshIndex][n + 2])
+                            triangles[i + 2] != allSubMeshes[subMeshIndex][n + 1] ||
+                            triangles[i + 1] != allSubMeshes[subMeshIndex][n + 2])
                         {
                             continue;
                         }

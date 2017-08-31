@@ -5,11 +5,11 @@ namespace UnityFBXExporter
 {
     public class FbxLayerElementColorNode : FbxLayerElementBaseNode
     {
-        private readonly Mesh _mesh;
+        private readonly MeshCache _cache;
 
-        public FbxLayerElementColorNode(int layer, Mesh mesh) : base("LayerElementColor", layer, "Col", "ByPolygonVertex", "IndexToDirect")
+        public FbxLayerElementColorNode(int layer, MeshCache cache) : base("LayerElementColor", layer, "Col", "ByPolygonVertex", "IndexToDirect")
         {
-            _mesh = mesh;
+            _cache = cache;
             var colorIndices = CalculateColorIndices();
             Colors(colorIndices);
             ColorIndex(colorIndices);
@@ -32,8 +32,8 @@ namespace UnityFBXExporter
 
         private void ColorIndex(Dictionary<Color, int> colorIndices)
         {
-            var colors = _mesh.colors;
-            var triangles = _mesh.triangles;
+            var colors = _cache.Colors;
+            var triangles = _cache.Triangles;
             var indices = new int[triangles.Length];
             for (var i = 0; i < triangles.Length; i++)
             {
@@ -44,7 +44,7 @@ namespace UnityFBXExporter
 
         private Dictionary<Color, int> CalculateColorIndices()
         {
-            var colors = _mesh.colors;
+            var colors = _cache.Colors;
             var colorTable = new Dictionary<Color, int>(colors.Length); // reducing amount of data by only keeping unique colors.
             var idx = 0;
 
