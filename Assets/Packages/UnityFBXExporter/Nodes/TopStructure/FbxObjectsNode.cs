@@ -45,7 +45,7 @@ namespace UnityFBXExporter
                     ChildNodes.Add(new FbxGeometryNode(mesh));
                     _geometryCache.Add(InstanceId(mesh));
                 }
-                _connections.Add(InstanceId(mesh), InstanceId(gameObject));
+                _connections.Add(InstanceId(gameObject), InstanceId(mesh));
             }
         }
 
@@ -61,7 +61,7 @@ namespace UnityFBXExporter
                         ChildNodes.Add(new FbxMaterialNode(mat));
                         _materialCache.Add(InstanceId(mat));
                     }
-                    _connections.Add(InstanceId(mat), InstanceId(renderer.gameObject));
+                    _connections.Add(InstanceId(renderer.gameObject), InstanceId(mat));
                 }
             }
         }
