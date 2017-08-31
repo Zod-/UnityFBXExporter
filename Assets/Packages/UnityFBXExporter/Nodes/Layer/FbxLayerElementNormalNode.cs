@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace UnityFBXExporter
+﻿namespace UnityFBXExporter
 {
     public class FbxLayerElementNormalNode : FbxLayerElementBaseNode
     {
