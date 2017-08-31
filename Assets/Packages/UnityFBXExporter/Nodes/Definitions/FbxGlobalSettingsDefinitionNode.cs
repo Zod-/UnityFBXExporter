@@ -2,7 +2,7 @@
 {
     public class FbxGlobalSettingsDefinitionNode : FbxObjectTypeBaseNode
     {
-        public FbxGlobalSettingsDefinitionNode() : base("Model", 1)
+        public FbxGlobalSettingsDefinitionNode() : base("GlobalSettings", 1)
         {
         }
     }
