@@ -17,6 +17,7 @@
             Property("Original|FileName", "KString", "", "", "");
             Property("LastSaved", "Compound", "", "", "");
             Property("LastSaved|ApplicationVendor", "KString", "", "", "");
+            Property("LastSaved|ApplicationName", "KString", "", "", "");
             Property("LastSaved|ApplicationVersion", "KString", "", "", "");
             Property("LastSaved|DateTime_GMT", "DateTime", "", "", "");
         }
