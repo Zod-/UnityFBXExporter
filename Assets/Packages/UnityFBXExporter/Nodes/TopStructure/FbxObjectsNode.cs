@@ -27,7 +27,7 @@ namespace UnityFBXExporter
             {
                 var gameObject = transform.gameObject;
                 ChildNodes.Add(new FbxModelNode(gameObject));
-                var parentId = gameObject == root ? 0 : InstanceId(gameObject.transform.parent);
+                var parentId = gameObject == root ? 0 : InstanceId(gameObject.transform.parent.gameObject);
                 _connections.Add(parentId, InstanceId(gameObject));
             }
         }
