@@ -17,13 +17,15 @@ namespace UnityFBXExporter
 
         private void Colors(Dictionary<Color, int> colorIndices)
         {
-            var colors = new List<float>(colorIndices.Count * 4);
+            var colors = new float[colorIndices.Count * 4];
+            var i = 0;
             foreach (var color in colorIndices)
             {
-                colors.Add(color.Key.r);
-                colors.Add(color.Key.g);
-                colors.Add(color.Key.b);
-                colors.Add(color.Key.a);
+                colors[i] = color.Key.r;
+                colors[i + 1] = color.Key.g;
+                colors[i + 2] = color.Key.b;
+                colors[i + 3] = color.Key.a;
+                i += 4;
             }
             ArrayNode("Colors", colors);
         }

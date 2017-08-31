@@ -87,7 +87,7 @@ namespace UnityFBXExporter
         private void WriteFbxProperty(FbxProperty prop)
         {
             _writer.AppendLine(
-                string.Format(@"{0}P: ""{1}"", ""{2}"", ""{3}"", ""{4}"",{5}",
+                string.Format(@"{0}P: ""{1}"", ""{2}"", ""{3}"", ""{4}"", {5}",
                 Indent(),
                 prop.Name,
                 prop.Type,

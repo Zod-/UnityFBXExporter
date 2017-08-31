@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Text;
-using UnityEngine;
+using System.Globalization;
 
 namespace UnityFBXExporter
 {
@@ -9,29 +8,25 @@ namespace UnityFBXExporter
     {
         public static string Serialize(object value)
         {
-            var collection = value as ICollection;
-            return collection != null ? SerializeCollection(collection) : SerializeValue(value);
+            return value.GetType().IsArray ? SerializeCollection(value as Array) : SerializeValue(value);
         }
 
         private static string SerializeValue(object value)
         {
+            if (value is string)
+            {
+                return string.Format("\"{0}\"", value);
+            }
             return value.ToString();
         }
 
-        private static string SerializeCollection(ICollection collection)
+        private static string SerializeCollection(Array collection)
         {
-            var sb = new StringBuilder(collection.Count);
-            var i = 0;
-            foreach (var value in collection)
+            if (collection is float[])
             {
-                sb.Append(value);
-                if (i != collection.Count - 1)
-                {
-                    sb.Append(',');
-                }
-                i++;
+                return string.Join(",", Array.ConvertAll((float[])collection, i => i.ToString(CultureInfo.InvariantCulture)));
             }
-            return sb.ToString();
+            return string.Join(",", Array.ConvertAll((int[])collection, i => i.ToString()));
         }
     }
 }

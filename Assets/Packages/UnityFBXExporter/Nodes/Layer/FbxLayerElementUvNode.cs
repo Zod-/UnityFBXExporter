@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UnityFBXExporter
 {
@@ -17,11 +16,11 @@ namespace UnityFBXExporter
         private void Uv()
         {
             var meshUv = _mesh.uv;
-            var uv = new List<float>(meshUv.Length * 2);
-            for (var i = 0; i < meshUv.Length; i++)
+            var uv = new float[meshUv.Length * 2];
+            for (int i = 0, j = 0; i < meshUv.Length; i++, j += 2)
             {
-                uv.Add(meshUv[i].x);
-                uv.Add(meshUv[i].y);
+                uv[j] = meshUv[i].x;
+                uv[j + 1] = meshUv[i].x;
             }
             ArrayNode("UV", uv);
         }

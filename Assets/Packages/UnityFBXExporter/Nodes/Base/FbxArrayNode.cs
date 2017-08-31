@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 
 namespace UnityFBXExporter
 {
@@ -6,9 +6,9 @@ namespace UnityFBXExporter
     {
         private readonly int _length;
 
-        public FbxArrayNode(string name, ICollection value) : base(name)
+        public FbxArrayNode(string name, Array value) : base(name)
         {
-            _length = value.Count;
+            _length = value.Length;
             Node("a", value);
         }
 

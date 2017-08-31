@@ -40,7 +40,7 @@ namespace UnityFBXExporter
                 }
             }
 
-            ArrayNode("Materials", materials);
+            ArrayNode("Materials", materials.ToArray());
         }
 
         private static IEnumerable<int> FindSubMeshIndex(int[] triangles, List<int[]> allSubMeshes)
