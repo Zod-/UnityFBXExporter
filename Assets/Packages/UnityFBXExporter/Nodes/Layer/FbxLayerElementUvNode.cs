@@ -20,7 +20,7 @@ namespace UnityFBXExporter
             for (int i = 0, j = 0; i < meshUv.Length; i++, j += 2)
             {
                 uv[j] = meshUv[i].x;
-                uv[j + 1] = meshUv[i].x;
+                uv[j + 1] = meshUv[i].y;
             }
             ArrayNode("UV", uv);
         }
