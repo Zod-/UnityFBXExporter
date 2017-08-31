@@ -4,14 +4,19 @@ using UnityEngine;
 
 namespace UnityFBXExporter
 {
-    public abstract class FbxNode : FbxNodeList
+    public abstract class FbxNode
     {
-        public int Count { get { return -1; } }
+        public string Name { get; private set; }
 
-        public object Value;
+        public List<FbxNode> Nodes = new List<FbxNode>();
         public List<FbxProperty> Properties = new List<FbxProperty>();
 
+        protected FbxNode(string name)
+        {
+            Name = name;
+        }
 
+        //Helpers
         protected void Node(string name, object value)
         {
             Nodes.Add(new FbxValueNode(name, value));

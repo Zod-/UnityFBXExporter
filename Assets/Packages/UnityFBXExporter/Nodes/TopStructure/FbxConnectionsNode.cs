@@ -6,9 +6,8 @@ namespace UnityFBXExporter
     {
         public List<FbxConnectionProperty> Connections = new List<FbxConnectionProperty>();
 
-        public FbxConnectionsNode()
+        public FbxConnectionsNode() : base("Connections")
         {
-            Name = "Connections";
         }
 
         public void Add(long parentId, long childId)

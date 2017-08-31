@@ -2,9 +2,10 @@
 {
     public class FbxValueNode : FbxNode
     {
-        public FbxValueNode(string name, object value)
+        public object Value { get; private set; }
+
+        public FbxValueNode(string name, object value) : base(name)
         {
-            Name = name;
             Value = value;
         }
     }

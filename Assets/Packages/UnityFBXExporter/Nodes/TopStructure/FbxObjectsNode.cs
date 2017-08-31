@@ -10,10 +10,9 @@ namespace UnityFBXExporter
         private readonly HashSet<long> _geometryCache = new HashSet<long>();
         private readonly HashSet<long> _materialCache = new HashSet<long>();
 
-        public FbxObjectsNode(GameObject[] gameObjects, FbxConnectionsNode connections)
+        public FbxObjectsNode(GameObject[] gameObjects, FbxConnectionsNode connections) : base("Objects")
         {
             _connections = connections;
-            Name = "Objects";
             foreach (var gameObject in gameObjects)
             {
                 AddModels(gameObject);

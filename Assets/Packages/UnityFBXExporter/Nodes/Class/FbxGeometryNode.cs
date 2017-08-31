@@ -5,14 +5,10 @@ namespace UnityFBXExporter
 {
     public class FbxGeometryNode : FbxClassNode
     {
-        private Mesh _mesh;
+        private readonly Mesh _mesh;
 
-        public FbxGeometryNode(Mesh mesh)
+        public FbxGeometryNode(Mesh mesh) : base("Geometry", InstaceId(mesh), "Mesh", "Mesh")
         {
-            Name = "Geometry";
-            Class = "Mesh";
-            SubClass = "Mesh";
-            Id = InstaceId(mesh);
             _mesh = mesh;
 
             Node("GeometryVersion", 124);

@@ -2,9 +2,8 @@
 {
     public class FbxLayerConnectionNode : FbxNode
     {
-        public FbxLayerConnectionNode(string type)
+        public FbxLayerConnectionNode(string type) : base("Layer")
         {
-            Name = "Layer";
             Node("Type", type);
             Node("TypedIndex", 0);
         }
