@@ -2,16 +2,24 @@
 {
     public class FbxClassNode : FbxNode
     {
-        public long Id { get; private set; }
-        public string Class { get; private set; }
-        public string SubClass { get; private set; }
+        private readonly long _id;
+        private readonly string _class;
+        private readonly string _subClass;
 
-        public FbxClassNode(string name, long id, string clazz, string subClass = "") : base(name)
+        protected FbxClassNode(string name, long id, string clazz, string subClass = "") : base(name)
         {
-            Id = id;
-            Class = clazz;
-            SubClass = subClass;
+            _id = id;
+            _class = clazz;
+            _subClass = subClass;
         }
 
+        public override string GetMetaName()
+        {
+            if (_id < 0)
+            {
+                return string.Format("\"{0}::{1}\", \"{2}\"", Name, _class, _subClass);
+            }
+            return string.Format("{0} \"{1}::{2}\", \"{3}\"", _id, Name, _class, _subClass);
+        }
     }
 }

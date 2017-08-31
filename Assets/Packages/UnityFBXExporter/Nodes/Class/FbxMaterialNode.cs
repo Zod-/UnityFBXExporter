@@ -6,7 +6,7 @@ namespace UnityFBXExporter
     {
         private readonly Material _mat;
 
-        public FbxMaterialNode(Material mat) : base("Material", InstaceId(mat), "Standard")
+        public FbxMaterialNode(Material mat) : base("Material", InstanceId(mat), "Standard")
         {
             _mat = mat;
 

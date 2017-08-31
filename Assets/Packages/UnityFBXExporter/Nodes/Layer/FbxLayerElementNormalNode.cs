@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace UnityFBXExporter
 {
@@ -17,24 +16,24 @@ namespace UnityFBXExporter
         {
             var triangles = _mesh.triangles;
             var meshNormals = _mesh.normals;
-            var normals = new List<float>(triangles.Length * 3);
+            var normals = new float[triangles.Length * 3 * 3];
 
-            for (var i = 0; i < triangles.Length; i += 3)
+            for (int i = 0, j = 0; i < triangles.Length; i += 3, j += 9)
             {
-                var normal = FbxExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i]]);
-                normals.Add(normal.x);
-                normals.Add(normal.y);
-                normals.Add(normal.z);
+                var normal = meshNormals[triangles[i]];
+                normals[j] = normal.x * -1;
+                normals[j + 1] = normal.y;
+                normals[j + 2] = normal.z;
 
-                normal = FbxExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i + 2]]);
-                normals.Add(normal.x);
-                normals.Add(normal.y);
-                normals.Add(normal.z);
+                normal = meshNormals[triangles[i + 2]];
+                normals[j + 3] = normal.x * -1;
+                normals[j + 4] = normal.y;
+                normals[j + 5] = normal.z;
 
-                normal = FbxExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i + 1]]);
-                normals.Add(normal.x);
-                normals.Add(normal.y);
-                normals.Add(normal.z);
+                normal = meshNormals[triangles[i + 1]];
+                normals[j + 6] = normal.x * -1;
+                normals[j + 7] = normal.y;
+                normals[j + 8] = normal.z;
             }
             ArrayNode("Normals", normals);
         }

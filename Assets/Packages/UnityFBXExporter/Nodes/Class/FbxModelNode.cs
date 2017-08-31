@@ -6,7 +6,7 @@ namespace UnityFBXExporter
     {
         private readonly GameObject _gameObject;
 
-        public FbxModelNode(GameObject gameObject) : base("Model", InstaceId(gameObject), gameObject.name, gameObject.HasMesh() ? "Mesh" : "Null")
+        public FbxModelNode(GameObject gameObject) : base("Model", InstanceId(gameObject), gameObject.name, gameObject.HasMesh() ? "Mesh" : "Null")
         {
             _gameObject = gameObject;
 

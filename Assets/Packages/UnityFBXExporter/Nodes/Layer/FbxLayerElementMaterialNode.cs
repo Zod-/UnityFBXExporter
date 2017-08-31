@@ -17,12 +17,12 @@ namespace UnityFBXExporter
         {
             var triangles = _mesh.triangles;
             var numberOfSubMeshes = _mesh.subMeshCount;
-            var materials = new List<int>(100);
+            var materials = new List<int>(triangles.Length);
 
             // For just one subMesh, we set them all to zero
             if (numberOfSubMeshes != 1)
             {
-                var allSubMeshes = new List<int[]>();
+                var allSubMeshes = new List<int[]>(numberOfSubMeshes);
 
                 // Load all subMeshes into a space
                 for (var i = 0; i < numberOfSubMeshes; i++)

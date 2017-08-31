@@ -7,7 +7,7 @@ namespace UnityFBXExporter
     {
         private readonly Mesh _mesh;
 
-        public FbxGeometryNode(Mesh mesh) : base("Geometry", InstaceId(mesh), "Mesh", "Mesh")
+        public FbxGeometryNode(Mesh mesh) : base("Geometry", InstanceId(mesh), "Mesh", "Mesh")
         {
             _mesh = mesh;
 
@@ -36,13 +36,13 @@ namespace UnityFBXExporter
 
         private void Vertices()
         {
-            var vertices = new float[_mesh.vertices.Length * 3];
-            for (var i = 0; i < _mesh.vertices.Length; i++)
+            var meshVertices = _mesh.vertices;
+            var vertices = new float[meshVertices.Length * 3];
+            for (var i = 0; i < meshVertices.Length; i++)
             {
-                var meshVertex = FbxExporter.ReverseTransformUnityCoordinate(_mesh.vertices[i]);
-                vertices[i] = meshVertex.x;
-                vertices[i + 1] = meshVertex.y;
-                vertices[i + 2] = meshVertex.z;
+                vertices[i] = meshVertices[i].x * -1;
+                vertices[i + 1] = meshVertices[i].y;
+                vertices[i + 2] = meshVertices[i].z;
             }
             ArrayNode("Vertices", vertices);
         }

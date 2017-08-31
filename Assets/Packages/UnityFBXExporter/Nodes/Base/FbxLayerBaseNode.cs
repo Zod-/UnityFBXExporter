@@ -2,12 +2,17 @@
 {
     public class FbxLayerBaseNode : FbxNode
     {
-        public int Layer { get; private set; }
+        private readonly int _layer;
 
-        public FbxLayerBaseNode(string name, int layer, int version = 101) : base(name)
+        protected FbxLayerBaseNode(string name, int layer, int version = 101) : base(name)
         {
-            Layer = layer;
+            _layer = layer;
             Node("Version", version);
+        }
+
+        public override string GetMetaName()
+        {
+            return _layer.ToString();
         }
     }
 }

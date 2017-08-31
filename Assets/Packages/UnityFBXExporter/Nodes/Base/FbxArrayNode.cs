@@ -4,12 +4,17 @@ namespace UnityFBXExporter
 {
     public class FbxArrayNode : FbxNode
     {
-        public int Length { get; private set; }
+        private readonly int _length;
 
         public FbxArrayNode(string name, ICollection value) : base(name)
         {
-            Length = value.Count;
+            _length = value.Count;
             Node("a", value);
+        }
+
+        public override string GetMetaName()
+        {
+            return string.Format("*{0}", _length);
         }
     }
 }
