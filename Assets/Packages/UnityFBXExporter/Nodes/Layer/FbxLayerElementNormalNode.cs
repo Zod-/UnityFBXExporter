@@ -16,7 +16,7 @@ namespace UnityFBXExporter
         {
             var triangles = _mesh.triangles;
             var meshNormals = _mesh.normals;
-            var normals = new float[triangles.Length * 3 * 3];
+            var normals = new float[triangles.Length * 3];
 
             for (int i = 0, j = 0; i < triangles.Length; i += 3, j += 9)
             {
