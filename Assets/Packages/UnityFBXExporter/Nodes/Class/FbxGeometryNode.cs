@@ -38,11 +38,11 @@ namespace UnityFBXExporter
         {
             var meshVertices = _mesh.vertices;
             var vertices = new float[meshVertices.Length * 3];
-            for (var i = 0; i < meshVertices.Length; i++)
+            for (int i = 0, j = 0; i < meshVertices.Length; i++, j += 3)
             {
-                vertices[i] = meshVertices[i].x * -1;
-                vertices[i + 1] = meshVertices[i].y;
-                vertices[i + 2] = meshVertices[i].z;
+                vertices[j] = meshVertices[i].x * -1;
+                vertices[j + 1] = meshVertices[i].y;
+                vertices[j + 2] = meshVertices[i].z;
             }
             ArrayNode("Vertices", vertices);
         }
