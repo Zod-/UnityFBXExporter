@@ -1,7 +1,6 @@
 ﻿using System.Text;
-using UnityFBXExporter;
 
-namespace Assets.Packages.UnityFBXExporter.Writer
+namespace UnityFBXExporter
 {
     public class FbxStringBuilderWriter : IWriter
     {
