@@ -40,12 +40,12 @@ namespace UnityFBXExporter
 
         protected void Property(string name, string type, string label, string flags, Color value)
         {
-            Property(name, type, label, flags, string.Format("{0},{1},{2}", value.r, value.g, value.b));
+            Properties.Add(new FbxProperty(name, type, label, flags, string.Format("{0},{1},{2}", value.r, value.g, value.b)));
         }
 
         protected void Property(string name, string type, string label, string flags, Vector3 value)
         {
-            Property(name, type, label, flags, string.Format("{0},{1},{2}", value.x, value.y, value.z));
+            Properties.Add(new FbxProperty(name, type, label, flags, string.Format("{0},{1},{2}", value.x, value.y, value.z)));
         }
 
         protected void ArrayNode(string name, ICollection value)
