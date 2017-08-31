@@ -31,5 +31,26 @@ namespace UnityFBXExporter
         {
             Nodes.Add(new FbxArrayNode(name, value));
         }
+
+        protected void ModelNode(GameObject gameObject)
+        {
+            Nodes.Add(new FbxModelNode(gameObject));
+        }
+
+        protected void GeometryNode(Mesh mesh)
+        {
+            Nodes.Add(new FbxGeometryNode(mesh));
+        }
+
+        public void MaterialNode(Material mat)
+        {
+            Nodes.Add(new FbxMaterialNode(mat));
+        }
+
+        public static long InstaceId(Object obj)
+        {
+            return Mathf.Abs(obj.GetInstanceID());
+        }
+
     }
 }

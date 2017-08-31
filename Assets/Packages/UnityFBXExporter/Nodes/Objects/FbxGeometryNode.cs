@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityFBXExporter
@@ -13,7 +12,7 @@ namespace UnityFBXExporter
             Name = "Geometry";
             Class = "Mesh";
             SubClass = "Mesh";
-            Id = GetIdForMesh(mesh);
+            Id = InstaceId(mesh);
             _mesh = mesh;
 
             Node("GeometryVersion", 124);
@@ -55,11 +54,6 @@ namespace UnityFBXExporter
         private void PolygonVertexIndex()
         {
             ArrayNode("PolygonVertexIndex", FBXExporter.FlipYZTriangles(_mesh.triangles, true));
-        }
-
-        public static long GetIdForMesh(Mesh mesh)
-        {
-            return Mathf.Abs(mesh.GetInstanceID());
         }
     }
 }

@@ -10,7 +10,7 @@ namespace UnityFBXExporter
         {
             Name = "Material";
             Class = "Standard";
-            Id = Mathf.Abs(mat.GetInstanceID());
+            Id = InstaceId(mat);
             _mat = mat;
 
             Node("Version", 102);

@@ -28,6 +28,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using HoloToolkit.Unity;
 
 namespace UnityFBXExporter
 {
@@ -58,7 +59,7 @@ namespace UnityFBXExporter
         {
             var geometryName = GetGeometryName(gameObject, mesh);
             var renderer = gameObject.GetComponent<MeshRenderer>();
-
+            Debug.Log(mesh.GetInstanceID());
             //Only have 1 copy of the geometry in the fbx file
             if (DoesGeometryExist(geometryIds, geometryName))
             {
@@ -118,7 +119,6 @@ namespace UnityFBXExporter
                     objectsSb.Append(",");
                 }
 
-                // Points in the vertices. We also reverse the x value because Unity has a reverse X coordinate
                 objectsSb.AppendFormat("{0},{1},{2}", vertices[i].x * -1, vertices[i].y, vertices[i].z);
             }
 
@@ -147,7 +147,6 @@ namespace UnityFBXExporter
                     objectsSb.Append(",");
                 }
 
-                // To get the correct normals, must rewind the triangles since we flipped the x direction
                 objectsSb.AppendFormat("{0},{1},{2}",
                     triangles[i],
                     triangles[i + 2],

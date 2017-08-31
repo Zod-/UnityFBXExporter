@@ -10,7 +10,7 @@ namespace UnityFBXExporter
         {
             Name = "Model";
             Class = gameObject.name;
-            Id = FBXExporter.GetRandomFBXId();
+            Id = InstaceId(gameObject);
             SubClass = gameObject.HasMesh() ? "Mesh" : "Null";
             _gameObject = gameObject;
 
