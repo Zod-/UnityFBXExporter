@@ -6,7 +6,7 @@
         {
             Node("Type", "UserData");
             Node("Version", 100);
-            Nodes.Add(new FbxMetaDataNode());
+            ChildNodes.Add(new FbxMetaDataNode());
             Property("DocumentUrl", "KString", "Url", "", path);
             Property("SrcDocumentUrl", "KString", "Url", "", path);
             Property("Original", "Compound", "", "", "");

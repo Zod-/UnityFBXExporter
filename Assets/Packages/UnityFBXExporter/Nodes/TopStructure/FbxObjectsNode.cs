@@ -26,7 +26,7 @@ namespace UnityFBXExporter
             foreach (var transform in root.transform.EnumerateHierarchy())
             {
                 var gameObject = transform.gameObject;
-                Nodes.Add(new FbxModelNode(gameObject));
+                ChildNodes.Add(new FbxModelNode(gameObject));
                 var parentId = gameObject == root ? 0 : InstanceId(gameObject.transform.parent);
                 _connections.Add(parentId, InstanceId(gameObject));
             }
@@ -42,7 +42,7 @@ namespace UnityFBXExporter
 
                 if (!_geometryCache.Contains(InstanceId(mesh)))
                 {
-                    Nodes.Add(new FbxGeometryNode(mesh));
+                    ChildNodes.Add(new FbxGeometryNode(mesh));
                     _geometryCache.Add(InstanceId(mesh));
                 }
                 _connections.Add(InstanceId(mesh), InstanceId(gameObject));
@@ -58,7 +58,7 @@ namespace UnityFBXExporter
                     if (mat == null) { continue; }
                     if (!_materialCache.Contains(InstanceId(mat)))
                     {
-                        Nodes.Add(new FbxMaterialNode(mat));
+                        ChildNodes.Add(new FbxMaterialNode(mat));
                         _materialCache.Add(InstanceId(mat));
                     }
                     _connections.Add(InstanceId(mat), InstanceId(renderer.gameObject));

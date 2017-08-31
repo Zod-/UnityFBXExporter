@@ -9,7 +9,7 @@ namespace UnityFBXExporter
     {
         public string Name { get; private set; }
 
-        public readonly List<FbxNode> Nodes = new List<FbxNode>(10);
+        public readonly List<FbxNode> ChildNodes = new List<FbxNode>(10);
         public readonly List<FbxProperty> Properties = new List<FbxProperty>(30);
 
         public virtual string GetMetaName()
@@ -25,7 +25,7 @@ namespace UnityFBXExporter
         //Helpers
         protected void Node(string name, object value)
         {
-            Nodes.Add(new FbxValueNode(name, value));
+            ChildNodes.Add(new FbxValueNode(name, value));
         }
 
         protected void Property(string name, string type, string label, string flags, object value)
@@ -33,9 +33,24 @@ namespace UnityFBXExporter
             Properties.Add(new FbxProperty(name, type, label, flags, value));
         }
 
+        protected void Property(string name, string type, string label, string flags, string value)
+        {
+            Properties.Add(new FbxProperty(name, type, label, flags, string.Format("\"{0}\"", value)));
+        }
+
+        protected void Property(string name, string type, string label, string flags, Color value)
+        {
+            Property(name, type, label, flags, string.Format("{0},{1},{2}", value.r, value.g, value.b));
+        }
+
+        protected void Property(string name, string type, string label, string flags, Vector3 value)
+        {
+            Property(name, type, label, flags, string.Format("{0},{1},{2}", value.x, value.y, value.z));
+        }
+
         protected void ArrayNode(string name, ICollection value)
         {
-            Nodes.Add(new FbxArrayNode(name, value));
+            ChildNodes.Add(new FbxArrayNode(name, value));
         }
 
         protected static long InstanceId(Object obj)

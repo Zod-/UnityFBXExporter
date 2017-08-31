@@ -9,8 +9,8 @@ namespace UnityFBXExporter
             Node("FBXHeaderVersion", 1003);
             Node("FBXVersion", 7300);
             Node("Creator", "FBX Unity Export version 1.2.1");
-            Nodes.Add(new FbxCreationTimeStampNode(DateTime.Now));
-            Nodes.Add(new FbxSceneInfoNode(path));
+            ChildNodes.Add(new FbxCreationTimeStampNode(DateTime.Now));
+            ChildNodes.Add(new FbxSceneInfoNode(path));
         }
     }
 }

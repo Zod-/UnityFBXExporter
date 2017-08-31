@@ -29,9 +29,9 @@ namespace UnityFBXExporter
             {
                 layerElements.Add(new FbxLayerElementColorNode(0, _mesh));
             }
-            layerElements.ForEach(Nodes.Add);
+            layerElements.ForEach(ChildNodes.Add);
 
-            Nodes.Add(new FbxLayerNode(0, layerElements));
+            ChildNodes.Add(new FbxLayerNode(0, layerElements));
         }
 
         private void Vertices()

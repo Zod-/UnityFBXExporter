@@ -4,7 +4,7 @@
     {
         public FbxMaterialTemplateNode() : base("Material", 1)
         {
-            Nodes.Add(new FbxSurfacePhongTemplateNode());
+            ChildNodes.Add(new FbxSurfacePhongTemplateNode());
         }
     }
 }

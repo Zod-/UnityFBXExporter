@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace UnityFBXExporter
 {
@@ -21,13 +22,13 @@ namespace UnityFBXExporter
         public void WriteGameObjects(GameObject[] gameObjects, string path)
         {
             WriteFileHeader();
-            WriteFbxNode(new FbxHeaderExtensionNode(path));
-            WriteFbxNode(new FbxGlobalSettingsNode());
-            WriteFbxNode(new FbxDefinitionsNode());
+            WriteFbxGenericNode(new FbxHeaderExtensionNode(path));
+            WriteFbxGenericNode(new FbxGlobalSettingsNode());
+            WriteFbxGenericNode(new FbxDefinitionsNode());
 
             var connections = new FbxConnectionsNode();
-            WriteFbxNode(new FbxObjectsNode(gameObjects, connections));
-            WriteFbxNode(connections);
+            WriteFbxGenericNode(new FbxObjectsNode(gameObjects, connections));
+            WriteFbxGenericNode(connections);
         }
 
         private void WriteFileHeader()
@@ -35,28 +36,30 @@ namespace UnityFBXExporter
             _writer.AppendLine(FbxHeader);
         }
 
-        private void WriteFbxNode(FbxNode node)
-        {
-            var valueNode = node as FbxValueNode;
-            if (valueNode != null)
-            {
-                WriteFbxValueNode(valueNode);
-            }
-            else
-            {
-                WriteFbxGenericNode(node);
-            }
-        }
-
         private void WriteFbxGenericNode(FbxNode node)
         {
             _writer.AppendLine(string.Format("{0}{1}: {2} {{", Indent(), node.Name, node.GetMetaName()));
             _indent++;
-            node.Nodes.ForEach(WriteFbxNode);
+            WriteFbxChildNodes(node.ChildNodes); //recursive ayy
             WriteFbxProperties(node);
             WriteFbxConnectionsNode(node as FbxConnectionsNode);
             _indent--;
             _writer.AppendLine(string.Format("{0}}}", Indent()));
+        }
+
+        private void WriteFbxChildNodes(List<FbxNode> nodes)
+        {
+            foreach (var node in nodes)
+            {
+                if (node is FbxValueNode)
+                {
+                    WriteFbxValueNode(node as FbxValueNode);
+                }
+                else
+                {
+                    WriteFbxGenericNode(node);
+                }
+            }
         }
 
         private void WriteFbxConnectionsNode(FbxConnectionsNode node)
@@ -106,8 +109,4 @@ namespace UnityFBXExporter
         }
     }
 
-    public interface IWriter
-    {
-        void AppendLine(string value);
-    }
 }

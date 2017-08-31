@@ -5,10 +5,10 @@ namespace UnityFBXExporter
     {
         public FbxDefinitionsNode() : base("Definitions")
         {
-            Nodes.Add(new FbxGlobalSettingsDefinitionNode());
-            Nodes.Add(new FbxModelTemplateNode());
-            Nodes.Add(new FbxGeometryTemplateNode());
-            Nodes.Add(new FbxMaterialTemplateNode());
+            ChildNodes.Add(new FbxGlobalSettingsDefinitionNode());
+            ChildNodes.Add(new FbxModelTemplateNode());
+            ChildNodes.Add(new FbxGeometryTemplateNode());
+            ChildNodes.Add(new FbxMaterialTemplateNode());
             //TODO Add Texture
         }
     }

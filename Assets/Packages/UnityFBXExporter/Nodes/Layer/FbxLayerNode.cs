@@ -8,7 +8,7 @@ namespace UnityFBXExporter
         {
             foreach (var layerElement in layerElements)
             {
-                Nodes.Add(new FbxLayerConnectionNode(layerElement.Name));
+                ChildNodes.Add(new FbxLayerConnectionNode(layerElement.Name));
             }
         }
     }

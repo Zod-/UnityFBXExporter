@@ -4,7 +4,7 @@
     {
         public FbxGeometryTemplateNode() : base("Geometry", 1)
         {
-            Nodes.Add(new FbxMeshTemplateNode());
+            ChildNodes.Add(new FbxMeshTemplateNode());
         }
     }
 }
