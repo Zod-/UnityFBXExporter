@@ -37,7 +37,7 @@ namespace UnityFBXExporter
             {
                 indices[i] = colorIndices[colors[i]];
             }
-            ArrayNode("ColorIndex", FBXExporter.FlipYZTriangles(indices));
+            ArrayNode("ColorIndex", FbxExporter.FlipYZTriangles(indices));
         }
 
         private Dictionary<Color, int> CalculateColorIndices()

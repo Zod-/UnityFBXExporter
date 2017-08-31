@@ -28,7 +28,7 @@ namespace UnityFBXExporter
 
         private void UvIndex()
         {
-            ArrayNode("UVIndex", FBXExporter.FlipYZTriangles(_mesh.triangles));
+            ArrayNode("UVIndex", FbxExporter.FlipYZTriangles(_mesh.triangles));
         }
     }
 }

@@ -21,17 +21,17 @@ namespace UnityFBXExporter
 
             for (var i = 0; i < triangles.Length; i += 3)
             {
-                var normal = FBXExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i]]);
+                var normal = FbxExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i]]);
                 normals.Add(normal.x);
                 normals.Add(normal.y);
                 normals.Add(normal.z);
 
-                normal = FBXExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i + 2]]);
+                normal = FbxExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i + 2]]);
                 normals.Add(normal.x);
                 normals.Add(normal.y);
                 normals.Add(normal.z);
 
-                normal = FBXExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i + 1]]);
+                normal = FbxExporter.ReverseTransformUnityCoordinate(meshNormals[triangles[i + 1]]);
                 normals.Add(normal.x);
                 normals.Add(normal.y);
                 normals.Add(normal.z);

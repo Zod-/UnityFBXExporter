@@ -1,4 +1,4 @@
-﻿namespace Assets.Packages.UnityFBXExporter.Nodes
+﻿namespace UnityFBXExporter
 {
     public class FbxConnectionProperty
     {

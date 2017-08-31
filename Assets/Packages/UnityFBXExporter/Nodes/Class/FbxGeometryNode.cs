@@ -43,7 +43,7 @@ namespace UnityFBXExporter
             var vertices = new float[_mesh.vertices.Length * 3];
             for (var i = 0; i < _mesh.vertices.Length; i++)
             {
-                var meshVertex = FBXExporter.ReverseTransformUnityCoordinate(_mesh.vertices[i]);
+                var meshVertex = FbxExporter.ReverseTransformUnityCoordinate(_mesh.vertices[i]);
                 vertices[i] = meshVertex.x;
                 vertices[i + 1] = meshVertex.y;
                 vertices[i + 2] = meshVertex.z;
@@ -53,7 +53,7 @@ namespace UnityFBXExporter
 
         private void PolygonVertexIndex()
         {
-            ArrayNode("PolygonVertexIndex", FBXExporter.FlipYZTriangles(_mesh.triangles, true));
+            ArrayNode("PolygonVertexIndex", FbxExporter.FlipYZTriangles(_mesh.triangles, true));
         }
     }
 }

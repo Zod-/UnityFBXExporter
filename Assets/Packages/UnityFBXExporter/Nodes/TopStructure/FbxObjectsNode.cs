@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Assets.Packages.UnityFBXExporter.Nodes;
 using HoloToolkit.Unity;
 using UnityEngine;
 
@@ -7,13 +6,13 @@ namespace UnityFBXExporter
 {
     public class FbxObjectsNode : FbxNode
     {
+        private readonly FbxConnectionsNode _connections;
         private readonly HashSet<long> _geometryCache = new HashSet<long>();
         private readonly HashSet<long> _materialCache = new HashSet<long>();
 
-        public List<FbxConnectionProperty> Connections = new List<FbxConnectionProperty>();
-
-        public FbxObjectsNode(GameObject[] gameObjects)
+        public FbxObjectsNode(GameObject[] gameObjects, FbxConnectionsNode connections)
         {
+            _connections = connections;
             Name = "Objects";
             foreach (var gameObject in gameObjects)
             {
@@ -30,7 +29,7 @@ namespace UnityFBXExporter
                 var gameObject = transform.gameObject;
                 ModelNode(gameObject);
                 var parentId = gameObject == root ? 0 : InstaceId(gameObject.transform.parent);
-                Connections.Add(new FbxConnectionProperty(parentId, InstaceId(gameObject)));
+                _connections.Add(parentId, InstaceId(gameObject));
             }
         }
 
@@ -47,7 +46,7 @@ namespace UnityFBXExporter
                     GeometryNode(mesh);
                     _geometryCache.Add(InstaceId(mesh));
                 }
-                Connections.Add(new FbxConnectionProperty(InstaceId(mesh), InstaceId(gameObject)));
+                _connections.Add(InstaceId(mesh), InstaceId(gameObject));
             }
         }
 
@@ -63,7 +62,7 @@ namespace UnityFBXExporter
                         MaterialNode(mat);
                         _materialCache.Add(InstaceId(mat));
                     }
-                    Connections.Add(new FbxConnectionProperty(InstaceId(mat), InstaceId(renderer.gameObject)));
+                    _connections.Add(InstaceId(mat), InstaceId(renderer.gameObject));
                 }
             }
         }
