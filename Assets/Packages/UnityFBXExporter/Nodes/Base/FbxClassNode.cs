@@ -19,7 +19,7 @@
             {
                 return string.Format("\"{0}::{1}\", \"{2}\"", Name, _class, _subClass);
             }
-            return string.Format("{0} \"{1}::{2}\", \"{3}\"", _id, Name, _class, _subClass);
+            return string.Format("{0}, \"{1}::{2}\", \"{3}\"", _id, Name, _class, _subClass);
         }
     }
 }
