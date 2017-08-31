@@ -2,7 +2,7 @@
 
 namespace UnityFBXExporter
 {
-    public class FbxModelNode : FBXNode
+    public class FbxModelNode : FbxNode
     {
         public new string Name { get { return "Model"; } }
         public new string Class { get { return _gameObject.name; } }

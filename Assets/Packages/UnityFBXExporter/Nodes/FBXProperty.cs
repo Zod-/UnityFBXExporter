@@ -1,6 +1,6 @@
 ﻿namespace UnityFBXExporter
 {
-    public class FBXProperty
+    public class FbxProperty
     {
         public string Name;
         public string Type;
@@ -8,7 +8,7 @@
         public string Flags;
         public object Value;
         
-        public FBXProperty(string name, string type, string label, string flags, object value)
+        public FbxProperty(string name, string type, string label, string flags, object value)
         {
             Name = name;
             Type = type;

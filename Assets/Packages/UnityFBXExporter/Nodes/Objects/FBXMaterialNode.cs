@@ -2,7 +2,7 @@
 
 namespace UnityFBXExporter
 {
-    public class FBXMaterialNode : FBXNode
+    public class FbxMaterialNode : FbxNode
     {
         public new string Name { get { return "Material"; } }
         public new string Class { get { return "Standard"; } }
@@ -10,7 +10,7 @@ namespace UnityFBXExporter
 
         private readonly Material _mat;
 
-        public FBXMaterialNode(Material mat)
+        public FbxMaterialNode(Material mat)
         {
             _mat = mat;
             Node("Version", 102);

@@ -1,8 +1,8 @@
 ﻿namespace UnityFBXExporter
 {
-    public class FBXValueNode : FBXNode
+    public class FbxValueNode : FbxNode
     {
-        public FBXValueNode(string name, object value)
+        public FbxValueNode(string name, object value)
         {
             Name = name;
             Value = value;

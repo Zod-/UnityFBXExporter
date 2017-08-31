@@ -2,10 +2,10 @@
 
 namespace UnityFBXExporter
 {
-    public abstract class FBXNodeList
+    public abstract class FbxNodeList
     {
         public string Name { get; set; }
 
-        public List<FBXNode> Nodes = new List<FBXNode>();
+        public List<FbxNode> Nodes = new List<FbxNode>();
     }
 }
