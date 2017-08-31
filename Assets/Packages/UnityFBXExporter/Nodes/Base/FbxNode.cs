@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace UnityFBXExporter
 {
@@ -51,6 +53,17 @@ namespace UnityFBXExporter
         {
             Nodes.Add(new FbxMaterialNode(mat));
         }
+
+        public void CreationTimeStamp(DateTime currentDate)
+        {
+            Nodes.Add(new FbxCreationTimeStampNode(currentDate));
+        }
+
+        public void MetaData()
+        {
+            Nodes.Add(new FbxMetaDataNode());
+        }
+
 
         public static long InstaceId(Object obj)
         {
