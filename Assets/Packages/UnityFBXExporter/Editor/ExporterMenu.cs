@@ -110,7 +110,7 @@ namespace UnityFBXExporter
             var newPath = GetNewPath(oldPath);
 
             if (string.IsNullOrEmpty(newPath)) { return null; }
-            var isSuccess = FBXExporter.ExportGameObjToFBX(gameObjects, newPath, copyMaterials, copyTextures);
+            var isSuccess = FbxExporter.ExportGameObjToFBX(gameObjects, newPath, copyMaterials, copyTextures);
 
             if (isSuccess)
             {

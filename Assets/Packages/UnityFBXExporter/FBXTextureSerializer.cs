@@ -101,7 +101,7 @@ namespace UnityFBXExporter
                 textureFilePathFullName = fullDataFolderPath + "/" + newPathFolder + textureName + textureExtension;
             }
 
-            var textureReference = FBXExporter.GetRandomFBXId();
+            var textureReference = FbxExporter.GetRandomFBXId();
 
             // TODO - test out different reference names to get one that doesn't load a _MainTex when importing.
             objectsSb.AppendLine("\tTexture: " + textureReference + ", \"Texture::" + materialName + "\", \"\" {");

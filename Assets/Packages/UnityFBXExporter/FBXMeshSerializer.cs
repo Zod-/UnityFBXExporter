@@ -50,7 +50,7 @@ namespace UnityFBXExporter
 
         private static void SerializeCore(GameObject gameObject, long parentModelId, StringBuilder objectsSb, StringBuilder connectionsSb, Dictionary<string, long> geometryIds)
         {
-            var modelId = FBXExporter.GetRandomFBXId();
+            var modelId = FbxExporter.GetRandomFBXId();
             var mesh = GetMesh(gameObject);
 
             SerializeObject(gameObject, mesh, modelId, parentModelId, objectsSb, connectionsSb);

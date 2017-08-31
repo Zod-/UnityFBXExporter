@@ -67,7 +67,7 @@ namespace UnityFBXExporter
                 return;
             }
 
-            var geometryId = FBXExporter.GetRandomFBXId();
+            var geometryId = FbxExporter.GetRandomFBXId();
             geometryIds[geometryName] = geometryId;
             MeshGeometryHeader(geometryId, objectsSb);
             {

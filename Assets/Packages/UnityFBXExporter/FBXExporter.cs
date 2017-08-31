@@ -38,7 +38,7 @@ using Object = UnityEngine.Object;
 
 namespace UnityFBXExporter
 {
-    public static class FBXExporter
+    public static class FbxExporter
     {
         public static string MeshToString(GameObject[] gameObjects, string newPath, bool copyMaterials = false, bool copyTextures = false)
         {

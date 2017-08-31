@@ -272,7 +272,7 @@ namespace UnityFBXExporter
         private static void CreatorInfo(StringBuilder sb)
         {
             // Info on the Creator
-            sb.AppendLine("\tCreator: \"" + FBXExporter.VersionInformation + "\"");
+            sb.AppendLine("\tCreator: \"" + FbxExporter.VersionInformation + "\"");
             sb.AppendLine("\tSceneInfo: \"SceneInfo::GlobalInfo\", \"UserData\" {");
             sb.AppendLine("\t\tType: \"UserData\"");
             sb.AppendLine("\t\tVersion: 100");
