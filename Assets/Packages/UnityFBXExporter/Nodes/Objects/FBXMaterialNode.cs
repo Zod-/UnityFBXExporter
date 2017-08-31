@@ -2,17 +2,17 @@
 
 namespace UnityFBXExporter
 {
-    public class FbxMaterialNode : FbxNode
+    public class FbxMaterialNode : FbxClassNode
     {
-        public new string Name { get { return "Material"; } }
-        public new string Class { get { return "Standard"; } }
-        public new long Id { get { return Mathf.Abs(_mat.GetInstanceID()); } }
-
         private readonly Material _mat;
 
         public FbxMaterialNode(Material mat)
         {
+            Name = "Material";
+            Class = "Standard";
+            Id = Mathf.Abs(mat.GetInstanceID());
             _mat = mat;
+
             Node("Version", 102);
             Node("ShadingModel", "phong");
             Node("MultiLayer", 0);

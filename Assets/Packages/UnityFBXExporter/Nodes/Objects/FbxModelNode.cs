@@ -2,18 +2,18 @@
 
 namespace UnityFBXExporter
 {
-    public class FbxModelNode : FbxNode
+    public class FbxModelNode : FbxClassNode
     {
-        public new string Name { get { return "Model"; } }
-        public new string Class { get { return _gameObject.name; } }
-
         private readonly GameObject _gameObject;
 
         public FbxModelNode(GameObject gameObject)
         {
+            Name = "Model";
+            Class = gameObject.name;
             Id = FBXExporter.GetRandomFBXId();
             SubClass = gameObject.HasMesh() ? "Mesh" : "Null";
             _gameObject = gameObject;
+
             Node("Version", 232);
             Node("Shading", 'T');
             Node("Culling", "CullingOff");

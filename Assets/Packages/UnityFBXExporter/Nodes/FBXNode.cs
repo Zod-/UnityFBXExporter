@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UnityFBXExporter
 {
     public abstract class FbxNode : FbxNodeList
     {
-        public long Id { get { return -1; } set { } }
-        public string Class { get { return string.Empty; } }
-        public string SubClass { get { return string.Empty; } set { } }
         public int Count { get { return -1; } }
 
         public object Value;
@@ -27,6 +25,11 @@ namespace UnityFBXExporter
         protected void Property(string name, string type, string label, string flags, Color value)
         {
             Property(name, type, label, flags, new[] { value.r, value.g, value.b });
+        }
+
+        protected void ArrayNode(string name, ICollection value)
+        {
+            Nodes.Add(new FbxArrayNode(name, value));
         }
     }
 }
