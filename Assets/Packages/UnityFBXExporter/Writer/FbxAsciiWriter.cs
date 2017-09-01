@@ -52,7 +52,7 @@ namespace UnityFBXExporter
         internal void WriteCommentHeader(FbxNode node)
         {
             if (string.IsNullOrEmpty(node.Header)) { return; }
-            WriteIndentedObject("}", 0);
+            WriteIndentedObject(node.Header, 0);
         }
 
         internal void OpenObject(FbxNode node, int indent)
