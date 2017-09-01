@@ -10,7 +10,7 @@
             Node("Version", version);
         }
 
-        public override string GetMetaName()
+        protected override string GetMetaName()
         {
             return _layer.ToString();
         }

@@ -12,7 +12,7 @@ namespace UnityFBXExporter
             Node("a", value);
         }
 
-        public override string GetMetaName()
+        protected override string GetMetaName()
         {
             return string.Format("*{0}", _length);
         }

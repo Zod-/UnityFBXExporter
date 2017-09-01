@@ -13,7 +13,7 @@
             _subClass = subClass;
         }
 
-        public override string GetMetaName()
+        protected override string GetMetaName()
         {
             if (_id < 0)
             {

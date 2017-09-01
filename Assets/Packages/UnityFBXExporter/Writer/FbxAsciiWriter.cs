@@ -7,7 +7,6 @@ namespace UnityFBXExporter
     {
 
         private readonly IWriter _writer;
-        private int _indent;
 
         public FbxAsciiWriter(IWriter writer)
         {
@@ -16,87 +15,65 @@ namespace UnityFBXExporter
 
         public void WriteGameObjects(GameObject[] gameObjects, string path)
         {
-            WriteFbxChildNodes(new FbxDocument(gameObjects, path));
+            WriteChildNodes(new FbxDocument(gameObjects, path).ChildNodes, 0);
         }
 
-        private void WriteFbxGenericNode(FbxNode node)
+        private void WriteFbxGenericNode(FbxNode node, int indent)
         {
-            WriteHeader(node);
-            _writer.AppendLine(string.Format("{0}{1}: {2} {{", Indent(), node.Name, node.GetMetaName()));
-            _indent++;
-            WriteFbxChildNodes(node); //recursive ayy
-            WriteFbxProperties(node);
-            WriteFbxConnectionsNode(node as FbxConnectionsNode);
-            _indent--;
-            _writer.AppendLine(string.Format("{0}}}", Indent()));
+            WriteCommentHeader(node);
+            OpenObject(node, indent);
+            WriteChildNodes(node.ChildNodes, indent + 1); //recursive ayy
+            WriteProperties(node.Properties, indent + 1);
+            CloseObject(indent);
         }
 
-        private void WriteHeader(FbxNode node)
+        private void WriteProperties(List<FbxNode> nodes, int indent)
+        {
+            if (nodes.Count == 0) { return; }
+            OpenObject(nodes[0], indent);
+            WriteChildNodes(nodes, indent + 1);
+            CloseObject(indent);
+        }
+
+        private void WriteChildNodes(List<FbxNode> nodes, int indent)
+        {
+            foreach (var node in nodes)
+            {
+                if (node is FbxValueNode)
+                {
+                    WriteIndentedObject(node, indent);
+                }
+                else
+                {
+                    WriteFbxGenericNode(node, indent);
+                }
+            }
+        }
+
+        private void WriteCommentHeader(FbxNode node)
         {
             if (string.IsNullOrEmpty(node.Header)) { return; }
             _writer.AppendLine(node.Header);
         }
 
-        private void WriteFbxChildNodes(FbxNode parentNode)
+        private void OpenObject(FbxNode node, int indent)
         {
-            foreach (var node in parentNode.ChildNodes)
-            {
-                if (node is FbxValueNode)
-                {
-                    WriteFbxValueNode(node as FbxValueNode);
-                }
-                else
-                {
-                    WriteFbxGenericNode(node);
-                }
-            }
+            WriteIndentedObject(node.GetFormattedMetaName(), indent);
         }
 
-        private void WriteFbxConnectionsNode(FbxConnectionsNode node)
+        private void CloseObject(int indent)
         {
-            if (node == null) { return; }
-            node.Connections.ForEach(WriteFbxConnections);
+            WriteIndentedObject("}", indent);
         }
 
-        private void WriteFbxConnections(FbxConnectionProperty conn)
+        private void WriteIndentedObject(object obj, int indent)
         {
-            _writer.AppendLine(string.Format("{0}C: \"{1}\",{2},{3}", Indent(), conn.Type, conn.ChildId, conn.ParentId));
+            _writer.AppendLine(string.Format("{0}{1}", Indent(indent), obj));
         }
 
-        private void WriteFbxProperties(FbxNode node)
+        private string Indent(int indent)
         {
-            if (node.Properties.Count == 0) { return; }
-
-            _writer.AppendLine(string.Format("{0}Properties70:  {{", Indent()));
-            _indent++;
-            node.Properties.ForEach(WriteFbxProperty);
-            _indent--;
-            _writer.AppendLine(string.Format("{0}}}", Indent()));
-        }
-
-        private void WriteFbxProperty(FbxProperty prop)
-        {
-            _writer.AppendLine(
-                string.Format(@"{0}P: ""{1}"", ""{2}"", ""{3}"", ""{4}"", {5}",
-                Indent(),
-                prop.Name,
-                prop.Type,
-                prop.Label,
-                prop.Flags,
-                FbxValueSerializer.Serialize(prop.Value)
-                )
-            );
-        }
-
-        private void WriteFbxValueNode(FbxValueNode fbxValueNode)
-        {
-            _writer.AppendLine(string.Format("{0}{1}: {2}", Indent(), fbxValueNode.Name, FbxValueSerializer.Serialize(fbxValueNode.Value)));
-        }
-
-        private string Indent()
-        {
-            return new string('\t', _indent);
+            return new string('\t', indent);
         }
     }
-
 }

@@ -11,14 +11,17 @@ namespace UnityFBXExporter
         public virtual string Header { get { return string.Empty; } }
 
         public readonly List<FbxNode> ChildNodes = new List<FbxNode>(10);
-        public readonly List<FbxProperty> Properties = new List<FbxProperty>(30);
+        public readonly List<FbxNode> Properties = new List<FbxNode>(30);
 
-        public virtual string GetMetaName()
+        protected virtual string GetMetaName()
         {
             return string.Empty;
         }
 
-
+        public string GetFormattedMetaName()
+        {
+            return string.Format("{0}: {1} {{", Name, GetMetaName());
+        }
 
         protected FbxNode(string name)
         {

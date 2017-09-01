@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace UnityFBXExporter
+﻿namespace UnityFBXExporter
 {
     public class FbxConnectionsNode : FbxNode
     {
@@ -15,15 +13,13 @@ namespace UnityFBXExporter
             }
         }
 
-        public readonly List<FbxConnectionProperty> Connections = new List<FbxConnectionProperty>();
-
         public FbxConnectionsNode() : base("Connections")
         {
         }
 
         public void Add(long parentId, long childId)
         {
-            Connections.Add(new FbxConnectionProperty(parentId, childId));
+            ChildNodes.Add(new FbxConnectionProperty(parentId, childId));
         }
     }
 }

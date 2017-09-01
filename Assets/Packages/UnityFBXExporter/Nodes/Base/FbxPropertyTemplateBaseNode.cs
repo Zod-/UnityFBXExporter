@@ -9,7 +9,7 @@
             _definitionName = definitionName;
         }
 
-        public override string GetMetaName()
+        protected override string GetMetaName()
         {
             return FbxValueSerializer.Serialize(_definitionName);
         }
