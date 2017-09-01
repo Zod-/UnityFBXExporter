@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using HoloToolkit.Unity;
 using UnityEngine;
 
 namespace UnityFBXExporter

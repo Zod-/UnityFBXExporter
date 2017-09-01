@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace HoloToolkit.Unity
+namespace UnityFBXExporter
 {
     public static class TransformExtensions
     {
