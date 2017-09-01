@@ -16,13 +16,7 @@ namespace UnityFBXExporter
 
         public void WriteGameObjects(GameObject[] gameObjects, string path)
         {
-            WriteFbxGenericNode(new FbxHeaderExtensionNode(path));
-            WriteFbxGenericNode(new FbxGlobalSettingsNode());
-            WriteFbxGenericNode(new FbxDefinitionsNode());
-
-            var connections = new FbxConnectionsNode();
-            WriteFbxGenericNode(new FbxObjectsNode(gameObjects, connections));
-            WriteFbxGenericNode(connections);
+            WriteFbxChildNodes(new FbxDocument(gameObjects, path));
         }
 
         private void WriteFbxGenericNode(FbxNode node)
@@ -30,7 +24,7 @@ namespace UnityFBXExporter
             WriteHeader(node);
             _writer.AppendLine(string.Format("{0}{1}: {2} {{", Indent(), node.Name, node.GetMetaName()));
             _indent++;
-            WriteFbxChildNodes(node.ChildNodes); //recursive ayy
+            WriteFbxChildNodes(node); //recursive ayy
             WriteFbxProperties(node);
             WriteFbxConnectionsNode(node as FbxConnectionsNode);
             _indent--;
@@ -43,9 +37,9 @@ namespace UnityFBXExporter
             _writer.AppendLine(node.Header);
         }
 
-        private void WriteFbxChildNodes(List<FbxNode> nodes)
+        private void WriteFbxChildNodes(FbxNode parentNode)
         {
-            foreach (var node in nodes)
+            foreach (var node in parentNode.ChildNodes)
             {
                 if (node is FbxValueNode)
                 {
