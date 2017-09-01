@@ -4,7 +4,18 @@ namespace UnityFBXExporter
 {
     public class FbxConnectionsNode : FbxNode
     {
-        public List<FbxConnectionProperty> Connections = new List<FbxConnectionProperty>();
+        public override string Header
+        {
+            get
+            {
+                return
+@"; Object connections
+;------------------------------------------------------------------
+";
+            }
+        }
+
+        public readonly List<FbxConnectionProperty> Connections = new List<FbxConnectionProperty>();
 
         public FbxConnectionsNode() : base("Connections")
         {

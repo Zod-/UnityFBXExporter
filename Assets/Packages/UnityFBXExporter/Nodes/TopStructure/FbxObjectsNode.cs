@@ -6,6 +6,16 @@ namespace UnityFBXExporter
 {
     public class FbxObjectsNode : FbxNode
     {
+        public override string Header
+        {
+            get
+            {
+                return
+@"; Object properties
+;------------------------------------------------------------------
+";
+            }
+        }
         private readonly FbxConnectionsNode _connections;
         private readonly HashSet<long> _geometryCache = new HashSet<long>();
         private readonly HashSet<long> _materialCache = new HashSet<long>();

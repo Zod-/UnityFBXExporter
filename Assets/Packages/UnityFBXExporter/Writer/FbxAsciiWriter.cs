@@ -6,11 +6,6 @@ namespace UnityFBXExporter
     public class FbxAsciiWriter
     {
 
-        public const string FbxHeader = @"; FBX 7.3.0 project file
-; Copyright (C) 1997-2010 Autodesk Inc. and/or its licensors.
-; All rights reserved.
-; ----------------------------------------------------
-";
         private readonly IWriter _writer;
         private int _indent;
 
@@ -21,7 +16,6 @@ namespace UnityFBXExporter
 
         public void WriteGameObjects(GameObject[] gameObjects, string path)
         {
-            WriteFileHeader();
             WriteFbxGenericNode(new FbxHeaderExtensionNode(path));
             WriteFbxGenericNode(new FbxGlobalSettingsNode());
             WriteFbxGenericNode(new FbxDefinitionsNode());
@@ -31,13 +25,9 @@ namespace UnityFBXExporter
             WriteFbxGenericNode(connections);
         }
 
-        private void WriteFileHeader()
-        {
-            _writer.AppendLine(FbxHeader);
-        }
-
         private void WriteFbxGenericNode(FbxNode node)
         {
+            WriteHeader(node);
             _writer.AppendLine(string.Format("{0}{1}: {2} {{", Indent(), node.Name, node.GetMetaName()));
             _indent++;
             WriteFbxChildNodes(node.ChildNodes); //recursive ayy
@@ -45,6 +35,12 @@ namespace UnityFBXExporter
             WriteFbxConnectionsNode(node as FbxConnectionsNode);
             _indent--;
             _writer.AppendLine(string.Format("{0}}}", Indent()));
+        }
+
+        private void WriteHeader(FbxNode node)
+        {
+            if (string.IsNullOrEmpty(node.Header)) { return; }
+            _writer.AppendLine(node.Header);
         }
 
         private void WriteFbxChildNodes(List<FbxNode> nodes)
@@ -73,7 +69,6 @@ namespace UnityFBXExporter
             _writer.AppendLine(string.Format("{0}C: \"{1}\",{2},{3}", Indent(), conn.Type, conn.ChildId, conn.ParentId));
         }
 
-
         private void WriteFbxProperties(FbxNode node)
         {
             if (node.Properties.Count == 0) { return; }
@@ -84,6 +79,7 @@ namespace UnityFBXExporter
             _indent--;
             _writer.AppendLine(string.Format("{0}}}", Indent()));
         }
+
         private void WriteFbxProperty(FbxProperty prop)
         {
             _writer.AppendLine(

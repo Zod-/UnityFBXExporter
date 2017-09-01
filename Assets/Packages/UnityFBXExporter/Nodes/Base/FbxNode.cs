@@ -8,6 +8,8 @@ namespace UnityFBXExporter
     {
         public string Name { get; private set; }
 
+        public virtual string Header { get { return string.Empty; } }
+
         public readonly List<FbxNode> ChildNodes = new List<FbxNode>(10);
         public readonly List<FbxProperty> Properties = new List<FbxProperty>(30);
 
@@ -15,6 +17,8 @@ namespace UnityFBXExporter
         {
             return string.Empty;
         }
+
+
 
         protected FbxNode(string name)
         {

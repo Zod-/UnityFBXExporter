@@ -3,6 +3,16 @@ namespace UnityFBXExporter
 {
     public class FbxDefinitionsNode : FbxNode
     {
+        public override string Header
+        {
+            get
+            {
+                return
+@"; Object definitions
+;------------------------------------------------------------------
+";
+            }
+        }
         public FbxDefinitionsNode() : base("Definitions")
         {
             ChildNodes.Add(new FbxGlobalSettingsDefinitionNode());
