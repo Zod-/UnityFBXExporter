@@ -12,9 +12,9 @@ namespace UnityFBXExporter
             _writer = writer;
         }
 
-        public void WriteGameObjects(GameObject[] gameObjects, string path)
+        public void Write(FbxDocument document)
         {
-            WriteChildNodes(new FbxDocument(gameObjects, path).ChildNodes, 0);
+            WriteChildNodes(document.ChildNodes, 0);
         }
 
         internal void WriteGenericNode(FbxNode node, int indent)
