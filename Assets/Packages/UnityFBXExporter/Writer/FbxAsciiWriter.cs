@@ -5,7 +5,6 @@ namespace UnityFBXExporter
 {
     public class FbxAsciiWriter
     {
-
         private readonly IWriter _writer;
 
         public FbxAsciiWriter(IWriter writer)
@@ -18,7 +17,7 @@ namespace UnityFBXExporter
             WriteChildNodes(new FbxDocument(gameObjects, path).ChildNodes, 0);
         }
 
-        private void WriteFbxGenericNode(FbxNode node, int indent)
+        internal void WriteGenericNode(FbxNode node, int indent)
         {
             WriteCommentHeader(node);
             OpenObject(node, indent);
@@ -27,7 +26,7 @@ namespace UnityFBXExporter
             CloseObject(indent);
         }
 
-        private void WriteProperties(List<FbxNode> nodes, int indent)
+        internal void WriteProperties(List<FbxNode> nodes, int indent)
         {
             if (nodes.Count == 0) { return; }
             OpenObject(nodes[0], indent);
@@ -35,7 +34,7 @@ namespace UnityFBXExporter
             CloseObject(indent);
         }
 
-        private void WriteChildNodes(List<FbxNode> nodes, int indent)
+        internal void WriteChildNodes(List<FbxNode> nodes, int indent)
         {
             foreach (var node in nodes)
             {
@@ -45,33 +44,33 @@ namespace UnityFBXExporter
                 }
                 else
                 {
-                    WriteFbxGenericNode(node, indent);
+                    WriteGenericNode(node, indent);
                 }
             }
         }
 
-        private void WriteCommentHeader(FbxNode node)
+        internal void WriteCommentHeader(FbxNode node)
         {
             if (string.IsNullOrEmpty(node.Header)) { return; }
-            _writer.AppendLine(node.Header);
+            WriteIndentedObject("}", 0);
         }
 
-        private void OpenObject(FbxNode node, int indent)
+        internal void OpenObject(FbxNode node, int indent)
         {
             WriteIndentedObject(node.GetFormattedMetaName(), indent);
         }
 
-        private void CloseObject(int indent)
+        internal void CloseObject(int indent)
         {
             WriteIndentedObject("}", indent);
         }
 
-        private void WriteIndentedObject(object obj, int indent)
+        internal void WriteIndentedObject(object obj, int indent)
         {
             _writer.AppendLine(string.Format("{0}{1}", Indent(indent), obj));
         }
 
-        private string Indent(int indent)
+        internal static string Indent(int indent)
         {
             return new string('\t', indent);
         }
