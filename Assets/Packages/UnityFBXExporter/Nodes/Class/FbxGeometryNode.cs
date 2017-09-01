@@ -44,11 +44,13 @@ namespace UnityFBXExporter
         private void Layer()
         {
             var containsColor = _cache.Colors.Length == _cache.Vertices.Length;
-            var layerElements = new List<FbxLayerElementBaseNode>();
+            var layerElements = new List<FbxLayerElementBaseNode>
+            {
+                new FbxLayerElementNormalNode(0, _cache),
+                new FbxLayerElementUvNode(0, _cache),
+                new FbxLayerElementMaterialNode(0, _cache)
+            };
 
-            layerElements.Add(new FbxLayerElementNormalNode(0, _cache));
-            layerElements.Add(new FbxLayerElementUvNode(0, _cache));
-            layerElements.Add(new FbxLayerElementMaterialNode(0, _cache));
             if (containsColor)
             {
                 layerElements.Add(new FbxLayerElementColorNode(0, _cache));

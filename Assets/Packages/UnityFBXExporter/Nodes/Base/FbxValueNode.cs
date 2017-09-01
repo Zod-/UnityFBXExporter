@@ -2,7 +2,7 @@
 {
     public class FbxValueNode : FbxNode
     {
-        public object Value { get; private set; }
+        protected readonly object Value;
 
         public FbxValueNode(string name, object value) : base(name)
         {
