@@ -11,7 +11,7 @@ namespace UnityFBXExporter
 
         public static IEnumerable<string> SerializeGenericNode(FbxNode node, int indent)
         {
-            if (string.IsNullOrEmpty(node.Header))
+            if (!string.IsNullOrEmpty(node.Header))
             {
                 yield return node.Header;
             }
