@@ -35,43 +35,19 @@ namespace UnityFBXExporter
     {
         // Dropdown
         [MenuItem("GameObject/FBX Exporter/Only GameObject", false, 40)]
-        public static void ExportDropdownGameObjectToFBX()
+        public static void ExportDropDownGameObjectToFbx()
         {
-            ExportCurrentGameObject(false, false);
-        }
-
-        [MenuItem("GameObject/FBX Exporter/With new Materials", false, 41)]
-        public static void ExportDropdownGameObjectAndMaterialsToFBX()
-        {
-            ExportCurrentGameObject(true, false);
-        }
-
-        [MenuItem("GameObject/FBX Exporter/With new Materials and Textures", false, 42)]
-        public static void ExportDropdownGameObjectAndMaterialsTexturesToFBX()
-        {
-            ExportCurrentGameObject(true, true);
+            ExportCurrentGameObject();
         }
 
         // Assets
         [MenuItem("Assets/FBX Exporter/Only GameObject", false, 30)]
-        public static void ExportGameObjectToFBX()
+        public static void ExportGameObjectToFbx()
         {
-            ExportCurrentGameObject(false, false);
+            ExportCurrentGameObject();
         }
-
-        [MenuItem("Assets/FBX Exporter/With new Materials", false, 31)]
-        public static void ExportGameObjectAndMaterialsToFBX()
-        {
-            ExportCurrentGameObject(true, false);
-        }
-
-        [MenuItem("Assets/FBX Exporter/With new Materials and Textures", false, 32)]
-        public static void ExportGameObjectAndMaterialsTexturesToFBX()
-        {
-            ExportCurrentGameObject(true, true);
-        }
-
-        private static void ExportCurrentGameObject(bool copyMaterials, bool copyTextures)
+        
+        private static void ExportCurrentGameObject()
         {
             if (Selection.activeGameObject == null)
             {
@@ -88,7 +64,7 @@ namespace UnityFBXExporter
                 return;
             }
 
-            ExportGameObject(currentGameObjects, copyMaterials, copyTextures);
+            ExportGameObject(currentGameObjects);
         }
 
         /// <summary>
@@ -96,28 +72,28 @@ namespace UnityFBXExporter
         /// </summary>
         /// <returns>The path of the newly exported FBX file</returns>
         /// <param name="gameObjects">Game object to be exported</param>
-        /// <param name="copyMaterials">If set to <c>true</c> copy materials.</param>
-        /// <param name="copyTextures">If set to <c>true</c> copy textures.</param>
         /// <param name="oldPath">Old path.</param>
-        public static string ExportGameObject(GameObject[] gameObjects, bool copyMaterials, bool copyTextures, string oldPath = null)
+        public static void ExportGameObject(GameObject[] gameObjects, string oldPath = null)
         {
             if (gameObjects == null)
             {
                 EditorUtility.DisplayDialog("Object is null", "Please select any GameObject to Export to FBX", "Okay");
-                return null;
+                return;
             }
 
             var newPath = GetNewPath(oldPath);
 
-            if (string.IsNullOrEmpty(newPath)) { return null; }
-            var isSuccess = FbxExporter.ExportGameObjToFBX(gameObjects, newPath, copyMaterials, copyTextures);
+            if (string.IsNullOrEmpty(newPath))
+            {
+                return;
+            }
+            var isSuccess = FbxExporter.ExportGameObjToFbx(gameObjects, newPath);
 
             if (isSuccess)
             {
-                return newPath;
+                return;
             }
             EditorUtility.DisplayDialog("Warning", "The extension probably wasn't an FBX file, could not export.", "Okay");
-            return null;
         }
 
         /// <summary>
