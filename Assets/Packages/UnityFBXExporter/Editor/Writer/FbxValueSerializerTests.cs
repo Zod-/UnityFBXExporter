@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using UnityEngine;
 
 namespace UnityFBXExporter
@@ -30,37 +29,37 @@ namespace UnityFBXExporter
         [Test]
         public void TestSerializeIntCollection()
         {
-            Assert.That(FbxValueSerializer.SerializeCollection(new int[] { 1, 2, 3, 4, 5 }), Is.EqualTo("1,2,3,4,5"));
+            Assert.That(FbxValueSerializer.SerializeCollection(new[] { 1, 2, 3, 4, 5 }), Is.EqualTo("1,2,3,4,5"));
         }
 
         [Test]
         public void TestSerializeFloatCollection()
         {
-            Assert.That(FbxValueSerializer.SerializeCollection(new float[] { 1.234f, 2f, 3.5f, 4.5f, 5.1f }), Is.EqualTo("1.234,2,3.5,4.5,5.1"));
+            Assert.That(FbxValueSerializer.SerializeCollection(new[] { 1.234f, 2f, 3.5f, 4.5f, 5.1f }), Is.EqualTo("1.234,2,3.5,4.5,5.1"));
         }
 
         [Test]
         public void TestSerializeSingleCollection()
         {
-            Assert.That(FbxValueSerializer.SerializeCollection(new Single[] { 1.234f, 2f, 3.5f, 4.5f, 5.1f }), Is.EqualTo("1.234,2,3.5,4.5,5.1"));
+            Assert.That(FbxValueSerializer.SerializeCollection(new[] { 1.234f, 2f, 3.5f, 4.5f, 5.1f }), Is.EqualTo("1.234,2,3.5,4.5,5.1"));
         }
 
         [Test]
         public void TestSerializeIntCollectionArrayCheck()
         {
-            Assert.That(FbxValueSerializer.Serialize(new int[] { 1, 2 }), Is.EqualTo("1,2"));
+            Assert.That(FbxValueSerializer.Serialize(new[] { 1, 2 }), Is.EqualTo("1,2"));
         }
 
         [Test]
         public void TestSerializeFloatCollectionArrayCheck()
         {
-            Assert.That(FbxValueSerializer.Serialize(new float[] { 1.1f, 2.2f }), Is.EqualTo("1.1,2.2"));
+            Assert.That(FbxValueSerializer.Serialize(new[] { 1.1f, 2.2f }), Is.EqualTo("1.1,2.2"));
         }
 
         [Test]
         public void TestSerializeSingleCollectionArrayCheck()
         {
-            Assert.That(FbxValueSerializer.Serialize(new Single[] { 1.1f, 2.2f }), Is.EqualTo("1.1,2.2"));
+            Assert.That(FbxValueSerializer.Serialize(new[] { 1.1f, 2.2f }), Is.EqualTo("1.1,2.2"));
         }
 
         [TestCase("String", "\"String\"")]

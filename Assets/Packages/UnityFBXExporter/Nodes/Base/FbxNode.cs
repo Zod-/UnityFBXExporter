@@ -49,7 +49,7 @@ namespace UnityFBXExporter
             ChildNodes.Add(new FbxArrayNode(name, value));
         }
 
-        protected static long InstanceId(Object obj)
+        public static long InstanceId(Object obj)
         {
             return Mathf.Abs(obj.GetInstanceID());
         }
