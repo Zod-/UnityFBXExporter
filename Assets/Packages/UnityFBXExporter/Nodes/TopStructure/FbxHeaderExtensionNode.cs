@@ -17,12 +17,12 @@ namespace UnityFBXExporter
             }
         }
 
-        public FbxHeaderExtensionNode(string path) : base("FBXHeaderExtension")
+        public FbxHeaderExtensionNode(string path, DateTime dateTime) : base("FBXHeaderExtension")
         {
             Node("FBXHeaderVersion", 1003);
             Node("FBXVersion", 7300);
             Node("Creator", "FBX Unity Export version 1.2.1");
-            ChildNodes.Add(new FbxCreationTimeStampNode(DateTime.Now));
+            ChildNodes.Add(new FbxCreationTimeStampNode(dateTime));
             ChildNodes.Add(new FbxSceneInfoNode(path));
         }
     }
