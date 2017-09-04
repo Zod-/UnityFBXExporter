@@ -27,6 +27,7 @@
 
 using UnityEngine;
 using System.IO;
+using System.Text;
 
 namespace UnityFBXExporter
 {
@@ -34,11 +35,12 @@ namespace UnityFBXExporter
     {
         public static string MeshToString(GameObject[] gameObjects, string newPath)
         {
-            var stringBuilder = new FbxStringBuilderWriter();
-            var document = new FbxDocument(gameObjects, newPath);
-            var writer = new FbxAsciiWriter(stringBuilder);
-            writer.Write(document);
-            return stringBuilder.Sb.ToString();
+            var stringBuilder = new StringBuilder();
+            foreach (var lines in FbxAsciiWriter.SerializeDocument(new FbxDocument(gameObjects, newPath)))
+            {
+                stringBuilder.AppendLine(lines);
+            }
+            return stringBuilder.ToString();
         }
 
         public static bool ExportGameObjToFbx(GameObject[] gameObjects, string newPath)

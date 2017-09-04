@@ -2,74 +2,76 @@
 
 namespace UnityFBXExporter
 {
-    public class FbxAsciiWriter
+    public static class FbxAsciiWriter
     {
-        private readonly IWriter _writer;
-
-        public FbxAsciiWriter(IWriter writer)
+        public static IEnumerable<string> SerializeDocument(FbxDocument document)
         {
-            _writer = writer;
+            return SerializeChildNodes(document.ChildNodes, 0);
         }
 
-        public void Write(FbxDocument document)
+        public static IEnumerable<string> SerializeGenericNode(FbxNode node, int indent)
         {
-            WriteChildNodes(document.ChildNodes, 0);
+            if (string.IsNullOrEmpty(node.Header))
+            {
+                yield return node.Header;
+            }
+            yield return OpenObject(node, indent);
+            foreach (var childLines in SerializeChildNodes(node.ChildNodes, indent + 1))
+            {
+                yield return childLines;
+            }
+            foreach (var childLines in SerializeProperties(node.Properties, indent + 1))
+            {
+                yield return childLines;
+            }
+            yield return CloseObject(indent);
         }
 
-        internal void WriteGenericNode(FbxNode node, int indent)
+        public static IEnumerable<string> SerializeProperties(List<FbxNode> nodes, int indent)
         {
-            WriteCommentHeader(node);
-            OpenObject(node, indent);
-            WriteChildNodes(node.ChildNodes, indent + 1); //recursive ayy
-            WriteProperties(node.Properties, indent + 1);
-            CloseObject(indent);
+            if (nodes.Count == 0) { yield break; }
+            yield return OpenObject(nodes[0], indent);
+            foreach (var childLines in SerializeChildNodes(nodes, indent + 1))
+            {
+                yield return childLines;
+            }
+            yield return CloseObject(indent);
         }
 
-        internal void WriteProperties(List<FbxNode> nodes, int indent)
-        {
-            if (nodes.Count == 0) { return; }
-            OpenObject(nodes[0], indent);
-            WriteChildNodes(nodes, indent + 1);
-            CloseObject(indent);
-        }
-
-        internal void WriteChildNodes(List<FbxNode> nodes, int indent)
+        public static IEnumerable<string> SerializeChildNodes(List<FbxNode> nodes, int indent)
         {
             foreach (var node in nodes)
             {
                 if (node is FbxValueNode)
                 {
-                    WriteIndentedObject(node, indent);
+                    yield return SerializeIndentedObject(node, indent);
                 }
                 else
                 {
-                    WriteGenericNode(node, indent);
+                    foreach (var childLines in SerializeGenericNode(node, indent))
+                    {
+                        yield return childLines;
+                    }
                 }
             }
         }
 
-        internal void WriteCommentHeader(FbxNode node)
+        public static string OpenObject(FbxNode node, int indent)
         {
-            if (string.IsNullOrEmpty(node.Header)) { return; }
-            WriteIndentedObject(node.Header, 0);
+            return SerializeIndentedObject(node.GetFormattedMetaName(), indent);
         }
 
-        internal void OpenObject(FbxNode node, int indent)
+        public static string CloseObject(int indent)
         {
-            WriteIndentedObject(node.GetFormattedMetaName(), indent);
+            return SerializeIndentedObject("}", indent);
         }
 
-        internal void CloseObject(int indent)
+        public static string SerializeIndentedObject(object obj, int indent)
         {
-            WriteIndentedObject("}", indent);
+            return string.Format("{0}{1}", Indent(indent), obj);
         }
 
-        internal void WriteIndentedObject(object obj, int indent)
-        {
-            _writer.AppendLine(string.Format("{0}{1}", Indent(indent), obj));
-        }
-
-        internal static string Indent(int indent)
+        public static string Indent(int indent)
         {
             return new string('\t', indent);
         }
