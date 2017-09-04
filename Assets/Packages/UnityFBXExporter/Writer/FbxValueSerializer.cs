@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using UnityEngine;
 
 namespace UnityFBXExporter
 {
@@ -15,6 +16,16 @@ namespace UnityFBXExporter
             if (value is string)
             {
                 return string.Format("\"{0}\"", value);
+            }
+            if (value is Color)
+            {
+                var color = (Color)value;
+                return SerializeCollection(new[] { color.r, color.g, color.b });
+            }
+            if (value is Vector3)
+            {
+                var color = (Vector3)value;
+                return SerializeCollection(new[] { color.x, color.y, color.z });
             }
             return value.ToString();
         }

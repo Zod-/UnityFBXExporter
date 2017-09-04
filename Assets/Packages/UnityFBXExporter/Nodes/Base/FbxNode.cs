@@ -39,16 +39,6 @@ namespace UnityFBXExporter
             Properties.Add(new FbxProperty(name, type, label, flags, value));
         }
 
-        protected void Property(string name, string type, string label, string flags, Color value)
-        {
-            Properties.Add(new FbxProperty(name, type, label, flags, new[] { value.r, value.g, value.b }));
-        }
-
-        protected void Property(string name, string type, string label, string flags, Vector3 value)
-        {
-            Properties.Add(new FbxProperty(name, type, label, flags, new[] { value.x, value.y, value.z }));
-        }
-
         protected void ArrayNode(string name, int[] value)
         {
             ChildNodes.Add(new FbxArrayNode(name, value));
