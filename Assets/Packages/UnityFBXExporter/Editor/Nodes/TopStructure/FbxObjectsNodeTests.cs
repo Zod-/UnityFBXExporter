@@ -16,5 +16,4 @@ namespace UnityFBXExporter
             Assert.That(actual, Is.EqualTo(string.Format(SampleData.GetTestData("TopStructure\\CubeObjectTest.fbx"), FbxNode.InstanceId(cube), FbxNode.InstanceId(empty))));
         }
     }
-
 }
