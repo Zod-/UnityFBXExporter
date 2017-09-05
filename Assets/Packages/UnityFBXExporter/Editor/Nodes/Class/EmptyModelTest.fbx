@@ -1,0 +1,16 @@
+Model: {0}, "Model::New Game Object", "Null" {{
+	Version: 232
+	Shading: T
+	Culling: "CullingOff"
+	Properties70:  {{
+		P: "RotationOrder", "enum", "", "", 4
+		P: "RotationActive", "bool", "", "", 1
+		P: "InheritType", "enum", "", "", 1
+		P: "ScalingMax", "Vector3D", "Vector", "", 0,0,0
+		P: "DefaultAttributeIndex", "int", "Integer", "", 0
+		P: "currentUVSet", "KString", "", "U", "map1"
+		P: "Lcl Translation", "Lcl Translation", "", "A+", 0,0,0
+		P: "Lcl Rotation", "Lcl Rotation", "", "A+", 0,0,0
+		P: "Lcl Scaling", "Lcl Scaling", "", "A", 1,1,1
+	}}
+}}
