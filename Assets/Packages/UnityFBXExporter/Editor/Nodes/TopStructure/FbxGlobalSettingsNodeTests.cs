@@ -13,5 +13,4 @@ namespace UnityFBXExporter
             Assert.That(actual, Is.EqualTo(SampleData.GetTestData("TopStructure\\GlobalSettingsTest.fbx")));
         }
     }
-
 }
