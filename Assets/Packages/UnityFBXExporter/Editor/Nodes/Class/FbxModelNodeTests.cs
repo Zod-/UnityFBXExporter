@@ -14,6 +14,7 @@ namespace UnityFBXExporter
         {
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             var fbxModelNode = new FbxModelNode(cube);
+            
             var actual = string.Join("", FbxAsciiWriter.SerializeGenericNode(fbxModelNode, 0).ToArray());
             Assert.That(actual, Is.EqualTo(string.Format(CubeModel, FbxNode.InstanceId(cube))));
         }
