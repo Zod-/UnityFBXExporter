@@ -1,0 +1,102 @@
+; Object properties
+;------------------------------------------------------------------
+
+Objects:  {{
+	Model: {0}, "Model::Cube", "Mesh" {{
+		Version: 232
+		Shading: T
+		Culling: "CullingOff"
+		Properties70:  {{
+			P: "RotationOrder", "enum", "", "", 4
+			P: "RotationActive", "bool", "", "", 1
+			P: "InheritType", "enum", "", "", 1
+			P: "ScalingMax", "Vector3D", "Vector", "", 0,0,0
+			P: "DefaultAttributeIndex", "int", "Integer", "", 0
+			P: "currentUVSet", "KString", "", "U", "map1"
+			P: "Lcl Translation", "Lcl Translation", "", "A+", 0,0,0
+			P: "Lcl Rotation", "Lcl Rotation", "", "A+", 0,0,0
+			P: "Lcl Scaling", "Lcl Scaling", "", "A", 1,1,1
+		}}
+	}}
+	Geometry: 484, "Geometry::Mesh", "Mesh" {{
+		GeometryVersion: 124
+		Vertices: *72 {{
+			a: -0.5,-0.5,0.5,0.5,-0.5,0.5,-0.5,0.5,0.5,0.5,0.5,0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,-0.5,0.5,0.5,0.5,0.5,0.5,-0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5,-0.5,0.5,0.5,0.5,0.5,0.5,0.5,-0.5,0.5,-0.5,-0.5,-0.5,-0.5,-0.5,-0.5,0.5,-0.5,-0.5,0.5,0.5,-0.5,-0.5,0.5
+		}}
+		PolygonVertexIndex: *36 {{
+			a: 0,3,-3,0,1,-4,8,5,-5,8,9,-6,10,7,-7,10,11,-8,12,14,-14,12,15,-15,16,18,-18,16,19,-19,20,22,-22,20,23,-23
+		}}
+		LayerElementNormal: 0 {{
+			Version: 101
+			Name: ""
+			MappingInformationType: "ByPolygonVertex"
+			ReferenceInformationType: "Direct"
+			Normals: *108 {{
+				a: 0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0,-1,0,0
+			}}
+		}}
+		LayerElementUV: 0 {{
+			Version: 101
+			Name: "map1"
+			MappingInformationType: "ByPolygonVertex"
+			ReferenceInformationType: "IndexToDirect"
+			UV: *48 {{
+				a: 0,0,1,0,0,1,1,1,0,1,1,1,0,1,1,1,0,0,1,0,0,0,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,0
+			}}
+			UVIndex: *36 {{
+				a: 0,3,2,0,1,3,8,5,4,8,9,5,10,7,6,10,11,7,12,14,13,12,15,14,16,18,17,16,19,18,20,22,21,20,23,22
+			}}
+		}}
+		LayerElementMaterial: 0 {{
+			Version: 101
+			Name: ""
+			MappingInformationType: "ByPolygon"
+			ReferenceInformationType: "IndexToDirect"
+			Materials: *12 {{
+				a: 0,0,0,0,0,0,0,0,0,0,0,0
+			}}
+		}}
+		Layer: 0 {{
+			Version: 100
+			LayerElement:  {{
+				Type: "LayerElementNormal"
+				TypedIndex: 0
+			}}
+			LayerElement:  {{
+				Type: "LayerElementUV"
+				TypedIndex: 0
+			}}
+			LayerElement:  {{
+				Type: "LayerElementMaterial"
+				TypedIndex: 0
+			}}
+		}}
+	}}
+	Material: 604, "Material::Default-Material", "" {{
+		Version: 102
+		ShadingModel: "phong"
+		MultiLayer: 0
+		Properties70:  {{
+			P: "Diffuse", "Vector3D", "Vector", "", 1,1,1
+			P: "DiffuseColor", "Color", "", "A", 1,1,1
+			P: "Emissive", "Vector3D", "Vector", "", 0,0,0
+			P: "EmissiveFactor", "Number", "", "A", 0
+		}}
+	}}
+	Model: {1}, "Model::New Game Object", "Null" {{
+		Version: 232
+		Shading: T
+		Culling: "CullingOff"
+		Properties70:  {{
+			P: "RotationOrder", "enum", "", "", 4
+			P: "RotationActive", "bool", "", "", 1
+			P: "InheritType", "enum", "", "", 1
+			P: "ScalingMax", "Vector3D", "Vector", "", 0,0,0
+			P: "DefaultAttributeIndex", "int", "Integer", "", 0
+			P: "currentUVSet", "KString", "", "U", "map1"
+			P: "Lcl Translation", "Lcl Translation", "", "A+", 0,0,0
+			P: "Lcl Rotation", "Lcl Rotation", "", "A+", 0,0,0
+			P: "Lcl Scaling", "Lcl Scaling", "", "A", 1,1,1
+		}}
+	}}
+}}
