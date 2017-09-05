@@ -3,11 +3,8 @@ using UnityEngine;
 
 namespace UnityFBXExporter
 {
-
-
     public class FbxMaterialNodeTests : MonoBehaviour
     {
-
         [Test]
         public void TestSerializeMeshModelNode()
         {
