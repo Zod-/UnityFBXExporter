@@ -9,9 +9,9 @@ namespace UnityFBXExporter
         public void TestSerializeMeshModelNode()
         {
             var mesh = GameObject.CreatePrimitive(PrimitiveType.Cube).GetMesh();
-            var fbxModelNode = new FbxGeometryNode(mesh);
+            var sut = new FbxGeometryNode(mesh);
 
-            var actual = SampleData.ToLines(FbxAsciiWriter.SerializeGenericNode(fbxModelNode, 0));
+            var actual = SampleData.ToLines(FbxAsciiWriter.SerializeGenericNode(sut, 0));
             Assert.That(actual, Is.EqualTo(string.Format(SampleData.GetTestData("Class\\CubeGeometryTest.fbx"), FbxNode.InstanceId(mesh))));
         }
     }

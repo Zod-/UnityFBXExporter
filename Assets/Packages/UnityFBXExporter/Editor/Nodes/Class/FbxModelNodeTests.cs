@@ -9,9 +9,9 @@ namespace UnityFBXExporter
         public void TestSerializeMeshModelNode()
         {
             var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            var fbxModelNode = new FbxModelNode(cube);
+            var sut = new FbxModelNode(cube);
 
-            var actual = SampleData.ToLines(FbxAsciiWriter.SerializeGenericNode(fbxModelNode, 0));
+            var actual = SampleData.ToLines(FbxAsciiWriter.SerializeGenericNode(sut, 0));
             Assert.That(actual, Is.EqualTo(string.Format(SampleData.GetTestData("Class\\CubeModelTest.fbx"), FbxNode.InstanceId(cube))));
         }
 
@@ -19,8 +19,8 @@ namespace UnityFBXExporter
         public void TestSerializeEmptyModelNode()
         {
             var gameObject = new GameObject();
-            var fbxModelNode = new FbxModelNode(gameObject);
-            var actual = SampleData.ToLines(FbxAsciiWriter.SerializeGenericNode(fbxModelNode, 0));
+            var sut = new FbxModelNode(gameObject);
+            var actual = SampleData.ToLines(FbxAsciiWriter.SerializeGenericNode(sut, 0));
             Assert.That(actual, Is.EqualTo(string.Format(SampleData.GetTestData("Class\\EmptyModelTest.fbx"), FbxNode.InstanceId(gameObject))));
         }
     }

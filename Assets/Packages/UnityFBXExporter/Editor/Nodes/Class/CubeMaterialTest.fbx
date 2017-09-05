@@ -1,0 +1,11 @@
+Material: {0}, "Material::Default-Material", "" {{
+	Version: 102
+	ShadingModel: "phong"
+	MultiLayer: 0
+	Properties70:  {{
+		P: "Diffuse", "Vector3D", "Vector", "", 1,1,1
+		P: "DiffuseColor", "Color", "", "A", 1,1,1
+		P: "Emissive", "Vector3D", "Vector", "", 0,0,0
+		P: "EmissiveFactor", "Number", "", "A", 0
+	}}
+}}
