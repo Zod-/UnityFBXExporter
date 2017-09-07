@@ -24,9 +24,8 @@ namespace UnityFBXExporter
         public int[] Triangles { get; private set; }
 
         public Vector3[] Vertices { get; private set; }
-        public Mesh Mesh{ get; private set; }
+        public Mesh Mesh { get; private set; }
     }
-
     public class FbxGeometryNode : FbxClassNode
     {
         private readonly MeshCache _cache;
@@ -36,8 +35,8 @@ namespace UnityFBXExporter
             _cache = new MeshCache(mesh);
 
             Node("GeometryVersion", 124);
-            Vertices();
-            PolygonVertexIndex();
+            ArrayNode("Vertices", new VerticesValue(_cache), _cache.Vertices.Length * 3);
+            ArrayNode("PolygonVertexIndex", new PolygonVertexIndexValue(_cache), _cache.Triangles.Length);
             Layer();
         }
 
@@ -59,23 +58,19 @@ namespace UnityFBXExporter
 
             ChildNodes.Add(new FbxLayerNode(0, layerElements));
         }
+    }
 
-        private void Vertices()
+    public class VerticesValue : MeshCacheValue
+    {
+        public VerticesValue(MeshCache meshCache) : base(meshCache)
         {
-            var meshVertices = _cache.Vertices;
-            var vertices = new float[meshVertices.Length * 3];
-            for (int i = 0, j = 0; i < meshVertices.Length; i++, j += 3)
-            {
-                vertices[j] = meshVertices[i].x * -1;
-                vertices[j + 1] = meshVertices[i].y;
-                vertices[j + 2] = meshVertices[i].z;
-            }
-            ArrayNode("Vertices", vertices);
         }
+    }
 
-        private void PolygonVertexIndex()
+    public class PolygonVertexIndexValue : MeshCacheValue
+    {
+        public PolygonVertexIndexValue(MeshCache meshCache) : base(meshCache)
         {
-            ArrayNode("PolygonVertexIndex", FbxExporter.FlipYZTriangles(_cache.Mesh.triangles, true));
         }
     }
 }

@@ -39,7 +39,8 @@ namespace UnityFBXExporter
                 }
             }
 
-            ArrayNode("Materials", materials.ToArray());
+            //TODO: Move into fbx serializer but how??
+            ArrayNode("Materials", materials.ToArray(), materials.Count);
         }
 
         private static IEnumerable<int> FindSubMeshIndex(int[] triangles, List<int[]> allSubMeshes)

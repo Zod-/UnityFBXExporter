@@ -1,14 +1,12 @@
-﻿using System;
-
-namespace UnityFBXExporter
+﻿namespace UnityFBXExporter
 {
     public class FbxArrayNode : FbxNode
     {
         private readonly int _length;
 
-        public FbxArrayNode(string name, Array value) : base(name)
+        public FbxArrayNode(string name, object value, int length) : base(name)
         {
-            _length = value.Length;
+            _length = length;
             Node("a", value);
         }
 

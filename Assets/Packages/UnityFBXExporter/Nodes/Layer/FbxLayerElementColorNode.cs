@@ -11,35 +11,8 @@ namespace UnityFBXExporter
         {
             _cache = cache;
             var colorIndices = CalculateColorIndices();
-            Colors(colorIndices);
-            ColorIndex(colorIndices);
-        }
-
-        private void Colors(Dictionary<Color, int> colorIndices)
-        {
-            var colors = new float[colorIndices.Count * 4];
-            var i = 0;
-            foreach (var color in colorIndices)
-            {
-                colors[i] = color.Key.r;
-                colors[i + 1] = color.Key.g;
-                colors[i + 2] = color.Key.b;
-                colors[i + 3] = color.Key.a;
-                i += 4;
-            }
-            ArrayNode("Colors", colors);
-        }
-
-        private void ColorIndex(Dictionary<Color, int> colorIndices)
-        {
-            var colors = _cache.Colors;
-            var triangles = _cache.Triangles;
-            var indices = new int[triangles.Length];
-            for (var i = 0; i < triangles.Length; i++)
-            {
-                indices[i] = colorIndices[colors[i]];
-            }
-            ArrayNode("ColorIndex", FbxExporter.FlipYZTriangles(indices));
+            ArrayNode("Colors", new ColorValue(_cache, colorIndices), colorIndices.Count * 4);
+            ArrayNode("ColorIndex", new ColorIndexValue(_cache, colorIndices), _cache.Triangles.Length);
         }
 
         private Dictionary<Color, int> CalculateColorIndices()
@@ -56,6 +29,26 @@ namespace UnityFBXExporter
                 idx++;
             }
             return colorTable;
+        }
+    }
+
+    public class ColorValue : MeshCacheValue
+    {
+        public Dictionary<Color, int> ColorIndices { get; private set; }
+
+        public ColorValue(MeshCache meshCache, Dictionary<Color, int> colorIndices) : base(meshCache)
+        {
+            ColorIndices = colorIndices;
+        }
+    }
+
+    public class ColorIndexValue : MeshCacheValue
+    {
+        public Dictionary<Color, int> ColorIndices { get; private set; }
+
+        public ColorIndexValue(MeshCache meshCache, Dictionary<Color, int> colorIndices) : base(meshCache)
+        {
+            ColorIndices = colorIndices;
         }
     }
 }

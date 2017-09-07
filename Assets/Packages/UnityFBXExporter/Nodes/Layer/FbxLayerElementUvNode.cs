@@ -2,30 +2,23 @@
 {
     public class FbxLayerElementUvNode : FbxLayerElementBaseNode
     {
-        private readonly MeshCache _cache;
-
         public FbxLayerElementUvNode(int layer, MeshCache cache) : base("LayerElementUV", layer, "map1", "ByPolygonVertex", "IndexToDirect")
         {
-            _cache = cache;
-            Uv();
-            UvIndex();
+            ArrayNode("UV", new UvValue(cache), cache.Uv.Length * 2);
+            ArrayNode("UVIndex", new UvIndexValue(cache), cache.Triangles.Length); 
         }
+    }
 
-        private void Uv()
+    public class UvValue : MeshCacheValue
+    {
+        public UvValue(MeshCache meshCache) : base(meshCache)
         {
-            var meshUv = _cache.Uv;
-            var uv = new float[meshUv.Length * 2];
-            for (int i = 0, j = 0; i < meshUv.Length; i++, j += 2)
-            {
-                uv[j] = meshUv[i].x;
-                uv[j + 1] = meshUv[i].y;
-            }
-            ArrayNode("UV", uv);
         }
-
-        private void UvIndex()
+    }
+    public class UvIndexValue : MeshCacheValue
+    {
+        public UvIndexValue(MeshCache meshCache) : base(meshCache)
         {
-            ArrayNode("UVIndex", _cache.Triangles);
         }
     }
 }
