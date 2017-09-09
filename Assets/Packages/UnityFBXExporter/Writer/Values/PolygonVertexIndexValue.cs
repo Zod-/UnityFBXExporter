@@ -10,11 +10,10 @@ namespace UnityFBXExporter
 
         public override string ToString()
         {
-            var triangles = MeshCache.Triangles;
             var sb = new StringBuilder();
-            foreach (var triangle in FbxExporter.FlipYZTriangles(triangles, true))
+            for (var i = 0; i < MeshCache.Triangles.Length; i += 3)
             {
-                sb.AppendFormat("{0},", triangle);
+                sb.AppendFormat("{0},{1},{2},", MeshCache.Triangles[i], MeshCache.Triangles[i + 2], -1 + MeshCache.Triangles[i + 1] * -1);
             }
             return sb.ToString().TrimEnd(',');
         }

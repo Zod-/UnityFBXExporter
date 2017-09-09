@@ -15,7 +15,7 @@ namespace UnityFBXExporter
 
         public override string ToString()
         {
-            var trianglesLength = MeshCache.FlippedTriangles.Length;
+            var trianglesLength = MeshCache.Triangles.Length;
             var sb = new StringBuilder(trianglesLength * 2);
             for (var i = 0; i < trianglesLength; i++)
             {

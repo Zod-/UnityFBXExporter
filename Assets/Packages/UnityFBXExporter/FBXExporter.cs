@@ -62,23 +62,5 @@ namespace UnityFBXExporter
             File.WriteAllText(newPath, buildMesh);
             return true;
         }
-
-        public static int[] FlipYZTriangles(int[] triangles, bool endPoly = false)
-        {
-            for (var i = 0; i < triangles.Length; i += 3)
-            {
-                var swap = triangles[i + 2];
-                if (endPoly)
-                {
-                    triangles[i + 2] = -1 + triangles[i + 1] * -1;
-                }
-                else
-                {
-                    triangles[i + 2] = triangles[i + 1];
-                }
-                triangles[i + 1] = swap;
-            }
-            return triangles;
-        }
     }
 }
