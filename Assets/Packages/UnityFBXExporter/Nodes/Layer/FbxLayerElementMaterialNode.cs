@@ -14,7 +14,7 @@ namespace UnityFBXExporter
 
         public void Materials()
         {
-            var triangles = _cache.Triangles;
+            var triangles = _cache.FlippedTriangles;
             var numberOfSubMeshes = _cache.Mesh.subMeshCount;
             var materials = new List<int>(triangles.Length);
 

@@ -12,7 +12,7 @@ namespace UnityFBXExporter
             _cache = cache;
             var colorIndices = CalculateColorIndices();
             ArrayNode("Colors", new ColorValue(_cache, colorIndices), colorIndices.Count * 4);
-            ArrayNode("ColorIndex", new ColorIndexValue(_cache, colorIndices), _cache.Triangles.Length);
+            ArrayNode("ColorIndex", new ColorIndexValue(_cache, colorIndices), _cache.FlippedTriangles.Length);
         }
 
         private Dictionary<Color, int> CalculateColorIndices()

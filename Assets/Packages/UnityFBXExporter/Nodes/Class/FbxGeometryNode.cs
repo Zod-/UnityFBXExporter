@@ -9,11 +9,14 @@ namespace UnityFBXExporter
         {
             Mesh = mesh;
             Vertices = mesh.vertices;
-            Triangles = FbxExporter.FlipYZTriangles(mesh.triangles);
+            FlippedTriangles = FbxExporter.FlipYZTriangles(mesh.triangles);
+            Triangles = mesh.triangles;
             Colors = mesh.colors;
             Normals = mesh.normals;
             Uv = mesh.uv;
         }
+
+        public int[] Triangles { get; private set; }
 
         public Vector2[] Uv { get; private set; }
 
@@ -21,7 +24,7 @@ namespace UnityFBXExporter
 
         public Color[] Colors { get; private set; }
 
-        public int[] Triangles { get; private set; }
+        public int[] FlippedTriangles { get; private set; }
 
         public Vector3[] Vertices { get; private set; }
         public Mesh Mesh { get; private set; }
@@ -36,7 +39,7 @@ namespace UnityFBXExporter
 
             Node("GeometryVersion", 124);
             ArrayNode("Vertices", new VerticesValue(_cache), _cache.Vertices.Length * 3);
-            ArrayNode("PolygonVertexIndex", new PolygonVertexIndexValue(_cache), _cache.Triangles.Length);
+            ArrayNode("PolygonVertexIndex", new PolygonVertexIndexValue(_cache), _cache.FlippedTriangles.Length);
             Layer();
         }
 

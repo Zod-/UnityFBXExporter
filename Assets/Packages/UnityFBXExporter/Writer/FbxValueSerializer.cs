@@ -74,12 +74,12 @@ namespace UnityFBXExporter
 
         private static string SerializeUvIndex(UvIndexValue value)
         {
-            return SerializeCollection(value.MeshCache.Triangles);
+            return SerializeCollection(value.MeshCache.FlippedTriangles);
         }
 
         private static string SerializeNormals(NormalsValue value)
         {
-            var triangles = value.MeshCache.Triangles;
+            var triangles = value.MeshCache.FlippedTriangles;
             var meshNormals = value.MeshCache.Normals;
             var sb = new StringBuilder(triangles.Length * 3);
             for (var i = 0; i < triangles.Length; i++)
@@ -97,7 +97,7 @@ namespace UnityFBXExporter
         private static string SerializeColorIndexes(ColorIndexValue value)
         {
             var colors = value.MeshCache.Colors;
-            var trianglesLength = value.MeshCache.Triangles.Length;
+            var trianglesLength = value.MeshCache.FlippedTriangles.Length;
             var sb = new StringBuilder(trianglesLength * 2);
             for (var i = 0; i < trianglesLength; i++)
             {
@@ -129,7 +129,7 @@ namespace UnityFBXExporter
 
         private static string SerializePolygonVertexIndexes(PolygonVertexIndexValue value)
         {
-            return SerializeCollection(FbxExporter.FlipYZTriangles(value.MeshCache.Mesh.triangles, true));
+            return SerializeCollection(FbxExporter.FlipYZTriangles(value.MeshCache.Triangles, true));
         }
 
         private static string SerializeString(string value)
