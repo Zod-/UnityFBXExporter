@@ -11,7 +11,7 @@
 
         protected override string GetMetaName()
         {
-            return FbxValueSerializer.Serialize(_definitionName);
+            return _definitionName.ToString();
         }
     }
 }

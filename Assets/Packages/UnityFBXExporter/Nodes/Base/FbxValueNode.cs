@@ -11,7 +11,7 @@
 
         public override string ToString()
         {
-            return string.Format("{0}: {1}", Name, FbxValueSerializer.Serialize(Value));
+            return string.Format("{0}: {1}", Name, Value);
         }
     }
 }

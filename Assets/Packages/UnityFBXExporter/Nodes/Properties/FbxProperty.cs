@@ -17,7 +17,7 @@
 
         public override string ToString()
         {
-            return string.Format(@"P: ""{0}"", ""{1}"", ""{2}"", ""{3}"", {4}", _propertyName, _type, _label, _flags, FbxValueSerializer.Serialize(Value));
+            return string.Format(@"P: ""{0}"", ""{1}"", ""{2}"", ""{3}"", {4}", _propertyName, _type, _label, _flags, Value);
         }
     }
 }

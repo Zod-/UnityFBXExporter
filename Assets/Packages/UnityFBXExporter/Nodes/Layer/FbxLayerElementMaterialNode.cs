@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace UnityFBXExporter
 {
@@ -40,7 +41,7 @@ namespace UnityFBXExporter
             }
 
             //TODO: Move into fbx serializer but how??
-            ArrayNode("Materials", materials.ToArray(), materials.Count);
+            ArrayNode("Materials", string.Join(",", Array.ConvertAll(materials.ToArray(), i => i.ToString())), materials.Count);
         }
 
         private static IEnumerable<int> FindSubMeshIndex(int[] triangles, List<int[]> allSubMeshes)

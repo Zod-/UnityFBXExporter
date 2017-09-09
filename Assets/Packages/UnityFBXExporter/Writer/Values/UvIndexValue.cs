@@ -1,4 +1,6 @@
-﻿namespace UnityFBXExporter
+﻿using System.Text;
+
+namespace UnityFBXExporter
 {
     public class UvIndexValue : MeshCacheValue
     {
@@ -8,7 +10,12 @@
 
         public override string ToString()
         {
-            return FbxValueSerializer.SerializeCollection(MeshCache.FlippedTriangles);
+            var sb = new StringBuilder();
+            foreach (var triangle in MeshCache.FlippedTriangles)
+            {
+                sb.AppendFormat("{0},", triangle);
+            }
+            return sb.ToString().TrimEnd(',');
         }
     }
 }

@@ -64,6 +64,11 @@ namespace UnityFBXExporter
             ChildNodes.Add(new FbxArrayNode(name, value, length));
         }
 
+        protected void ArrayNode(string name, FbxValue value, int length)
+        {
+            ChildNodes.Add(new FbxArrayNode(name, value, length));
+        }
+
         public static long InstanceId(Object obj)
         {
             return Mathf.Abs(obj.GetInstanceID());
