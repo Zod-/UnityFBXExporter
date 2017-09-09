@@ -61,15 +61,11 @@ namespace UnityFBXExporter
         {
             var meshUv = value.MeshCache.Uv;
             var sb = new StringBuilder(meshUv.Length * 4);
-            for (int i = 0; i < meshUv.Length; i++)
+            for (var i = 0; i < meshUv.Length; i++)
             {
-                sb.AppendFormat("{0},{1}", meshUv[i].x, meshUv[i].y);
-                if (i != meshUv.Length - 1)
-                {
-                    sb.Append(",");
-                }
+                sb.AppendFormat("{0},{1},", meshUv[i].x, meshUv[i].y);
             }
-            return sb.ToString();
+            return sb.ToString().TrimEnd(',');
         }
 
         private static string SerializeUvIndex(UvIndexValue value)
@@ -82,49 +78,33 @@ namespace UnityFBXExporter
             var triangles = value.MeshCache.FlippedTriangles;
             var meshNormals = value.MeshCache.Normals;
             var sb = new StringBuilder(triangles.Length * 3);
-            for (var i = 0; i < triangles.Length; i++)
+            foreach (var triangle in triangles)
             {
-                var normal = meshNormals[triangles[i]];
-                sb.AppendFormat("{0},{1},{2}", normal.x * -1, normal.y, normal.z);
-                if (i != triangles.Length - 1)
-                {
-                    sb.Append(",");
-                }
+                var normal = meshNormals[triangle];
+                sb.AppendFormat("{0},{1},{2},", normal.x * -1, normal.y, normal.z);
             }
-            return sb.ToString();
+            return sb.ToString().TrimEnd(',');
         }
 
         private static string SerializeColorIndexes(ColorIndexValue value)
         {
-            var colors = value.MeshCache.Colors;
             var trianglesLength = value.MeshCache.FlippedTriangles.Length;
             var sb = new StringBuilder(trianglesLength * 2);
             for (var i = 0; i < trianglesLength; i++)
             {
-                sb.Append(value.ColorIndices[colors[i]]);
-                if (i != trianglesLength - 1)
-                {
-                    sb.Append(",");
-                }
+                sb.AppendFormat("{0},", value.ColorIndices[value.MeshCache.Colors[i]]);
             }
-            return sb.ToString();
+            return sb.ToString().TrimEnd(',');
         }
 
         private static string SerializeColors(ColorValue value)
         {
             var sb = new StringBuilder(value.ColorIndices.Count * 4 * 3);
-            var i = 0;
-            var last = value.ColorIndices.Count - 1;
             foreach (var color in value.ColorIndices)
             {
-                sb.AppendFormat("{0},{1},{2},{3}", color.Key.r, color.Key.g, color.Key.b, color.Key.a);
-                if (i != last)
-                {
-                    sb.Append(",");
-                }
-                i++;
+                sb.AppendFormat("{0},{1},{2},{3},", color.Key.r, color.Key.g, color.Key.b, color.Key.a);
             }
-            return sb.ToString();
+            return sb.ToString().TrimEnd(',');
         }
 
         private static string SerializePolygonVertexIndexes(PolygonVertexIndexValue value)
@@ -143,13 +123,9 @@ namespace UnityFBXExporter
             var sb = new StringBuilder(meshVertices.Length * 3);
             for (var i = 0; i < meshVertices.Length; i++)
             {
-                sb.AppendFormat("{0},{1},{2}", meshVertices[i].x * -1, meshVertices[i].y, meshVertices[i].z);
-                if (i != meshVertices.Length - 1)
-                {
-                    sb.Append(",");
-                }
+                sb.AppendFormat("{0},{1},{2},", meshVertices[i].x * -1, meshVertices[i].y, meshVertices[i].z);
             }
-            return sb.ToString();
+            return sb.ToString().TrimEnd(',');
         }
 
         private static string SerializeVector3(Vector3 vector)
