@@ -8,13 +8,19 @@ namespace UnityFBXExporter
         [Test]
         public void TestSerializeVector3()
         {
-            Assert.That(FbxValueSerializer.Serialize(Vector3.one), Is.EqualTo("1,1,1"));
+            Assert.That(FbxValueSerializer.Serialize(new Vector3Value(Vector3.one)), Is.EqualTo("1,1,1"));
         }
 
         [Test]
         public void TestSerializeColor()
         {
-            Assert.That(FbxValueSerializer.Serialize(Color.white), Is.EqualTo("1,1,1"));
+            Assert.That(FbxValueSerializer.Serialize(new ColorValue(Color.white)), Is.EqualTo("1,1,1"));
+        }
+
+        [Test]
+        public void TestSerializeString()
+        {
+            Assert.That(FbxValueSerializer.Serialize(new StringValue("String")), Is.EqualTo("\"String\""));
         }
 
         [Test]
@@ -41,7 +47,6 @@ namespace UnityFBXExporter
             Assert.That(FbxValueSerializer.Serialize(new[] { 1.1f, 2.2f }), Is.EqualTo("1.1,2.2"));
         }
 
-        [TestCase("String", "\"String\"")]
         [TestCase(123, "123")]
         [TestCase(17179869176L, "17179869176")]
         [TestCase('T', "T")]

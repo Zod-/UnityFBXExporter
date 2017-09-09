@@ -7,11 +7,4 @@
             ArrayNode("Normals", new NormalsValue(cache), cache.FlippedTriangles.Length * 3);
         }
     }
-
-    public class NormalsValue : MeshCacheValue
-    {
-        public NormalsValue(MeshCache meshCache) : base(meshCache)
-        {
-        }
-    }
 }

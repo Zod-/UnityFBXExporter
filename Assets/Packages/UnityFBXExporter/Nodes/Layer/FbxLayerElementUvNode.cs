@@ -8,17 +8,4 @@
             ArrayNode("UVIndex", new UvIndexValue(cache), cache.FlippedTriangles.Length); 
         }
     }
-
-    public class UvValue : MeshCacheValue
-    {
-        public UvValue(MeshCache meshCache) : base(meshCache)
-        {
-        }
-    }
-    public class UvIndexValue : MeshCacheValue
-    {
-        public UvIndexValue(MeshCache meshCache) : base(meshCache)
-        {
-        }
-    }
 }

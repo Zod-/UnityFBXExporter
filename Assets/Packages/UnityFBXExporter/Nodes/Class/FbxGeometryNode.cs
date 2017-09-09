@@ -62,18 +62,4 @@ namespace UnityFBXExporter
             ChildNodes.Add(new FbxLayerNode(0, layerElements));
         }
     }
-
-    public class VerticesValue : MeshCacheValue
-    {
-        public VerticesValue(MeshCache meshCache) : base(meshCache)
-        {
-        }
-    }
-
-    public class PolygonVertexIndexValue : MeshCacheValue
-    {
-        public PolygonVertexIndexValue(MeshCache meshCache) : base(meshCache)
-        {
-        }
-    }
 }

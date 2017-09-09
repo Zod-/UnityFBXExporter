@@ -11,8 +11,8 @@ namespace UnityFBXExporter
         {
             _cache = cache;
             var colorIndices = CalculateColorIndices();
-            ArrayNode("Colors", new ColorValue(_cache, colorIndices), colorIndices.Count * 4);
-            ArrayNode("ColorIndex", new ColorIndexValue(_cache, colorIndices), _cache.FlippedTriangles.Length);
+            ArrayNode("Colors", new MeshColorValue(_cache, colorIndices), colorIndices.Count * 4);
+            ArrayNode("ColorIndex", new MeshColorIndexValue(_cache, colorIndices), _cache.FlippedTriangles.Length);
         }
 
         private Dictionary<Color, int> CalculateColorIndices()
@@ -29,26 +29,6 @@ namespace UnityFBXExporter
                 idx++;
             }
             return colorTable;
-        }
-    }
-
-    public class ColorValue : MeshCacheValue
-    {
-        public Dictionary<Color, int> ColorIndices { get; private set; }
-
-        public ColorValue(MeshCache meshCache, Dictionary<Color, int> colorIndices) : base(meshCache)
-        {
-            ColorIndices = colorIndices;
-        }
-    }
-
-    public class ColorIndexValue : MeshCacheValue
-    {
-        public Dictionary<Color, int> ColorIndices { get; private set; }
-
-        public ColorIndexValue(MeshCache meshCache, Dictionary<Color, int> colorIndices) : base(meshCache)
-        {
-            ColorIndices = colorIndices;
         }
     }
 }
