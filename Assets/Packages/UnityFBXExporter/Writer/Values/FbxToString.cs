@@ -45,6 +45,9 @@ namespace UnityFBXExporter
             return sb;
         }
 
+        /// <summary>
+        /// A good portion of the float values will be either 0, 1 or -1
+        /// </summary>
         internal static StringBuilder ToStringFbx(this float value, StringBuilder sb)
         {
             if (value == 0f)
