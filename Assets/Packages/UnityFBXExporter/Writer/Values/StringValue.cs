@@ -1,4 +1,6 @@
-﻿namespace UnityFBXExporter
+﻿using System.Text;
+
+namespace UnityFBXExporter
 {
     public class StringValue : FbxValue
     {
@@ -11,7 +13,11 @@
 
         public override string ToString()
         {
-            return string.Format("\"{0}\"", _string);
+            var sb = new StringBuilder(_string.Length + 2);
+            sb.Append('"');
+            sb.Append(_string);
+            sb.Append('"');
+            return sb.ToString();
         }
     }
 }

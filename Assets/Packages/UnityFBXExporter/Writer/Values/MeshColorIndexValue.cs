@@ -19,7 +19,7 @@ namespace UnityFBXExporter
             var sb = new StringBuilder(trianglesLength * 2);
             for (var i = 0; i < trianglesLength; i++)
             {
-                sb.AppendFormat("{0},", _colorIndices[MeshCache.Colors[i]]);
+                sb.Append(_colorIndices[MeshCache.Colors[i]]).Append(',');
             }
             return sb.ToString().TrimEnd(',');
         }

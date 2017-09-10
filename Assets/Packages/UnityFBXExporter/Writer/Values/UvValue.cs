@@ -13,7 +13,7 @@ namespace UnityFBXExporter
             var sb = new StringBuilder(MeshCache.Uv.Length * 4);
             for (var i = 0; i < MeshCache.Uv.Length; i++)
             {
-                sb.AppendFormat("{0},{1},", MeshCache.Uv[i].x, MeshCache.Uv[i].y);
+                MeshCache.Uv[i].ToStringFbx(sb).Append(',');
             }
             return sb.ToString().TrimEnd(',');
         }

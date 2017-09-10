@@ -13,7 +13,9 @@ namespace UnityFBXExporter
             var sb = new StringBuilder();
             for (var i = 0; i < MeshCache.Triangles.Length; i += 3)
             {
-                sb.AppendFormat("{0},{1},{2},", MeshCache.Triangles[i], MeshCache.Triangles[i + 2], -1 + MeshCache.Triangles[i + 1] * -1);
+                sb.Append(MeshCache.Triangles[i]).Append(',');
+                sb.Append(MeshCache.Triangles[i + 2]).Append(',');
+                sb.Append(-1 + MeshCache.Triangles[i + 1] * -1).Append(',');
             }
             return sb.ToString().TrimEnd(',');
         }

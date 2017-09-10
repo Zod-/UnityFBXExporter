@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Text;
+using UnityEngine;
 
 namespace UnityFBXExporter
 {
@@ -13,7 +14,7 @@ namespace UnityFBXExporter
 
         public override string ToString()
         {
-            return string.Format("{0},{1},{2}", _color.r, _color.g, _color.b);
+            return _color.ToStringFbx(new StringBuilder(16)).ToString();
         }
     }
 }

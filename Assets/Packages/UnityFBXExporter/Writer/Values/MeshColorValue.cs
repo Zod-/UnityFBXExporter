@@ -18,7 +18,7 @@ namespace UnityFBXExporter
             var sb = new StringBuilder(_colorIndices.Count * 4 * 3);
             foreach (var color in _colorIndices)
             {
-                sb.AppendFormat("{0},{1},{2},{3},", color.Key.r, color.Key.g, color.Key.b, color.Key.a);
+                color.Key.ToStringFbxAlpha(sb).Append(',');
             }
             return sb.ToString().TrimEnd(',');
         }
